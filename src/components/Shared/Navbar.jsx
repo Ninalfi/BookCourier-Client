@@ -30,8 +30,8 @@ const Navbar = () => {
     <>
       <li><NavLink to="/" className="flex items-center gap-1 dark:text-(--color-primary) hover:text-[var(--bc-accent)]"><FaHome /> Home</NavLink></li>
       <li><NavLink to="/books" className="flex items-center gap-1 hover:text-(--bc-accent) dark:text-(--color-primary)"><FaBook /> Books</NavLink></li>
-      <li><NavLink to="/dashboard" className="flex items-center dark:text-(--color-primary) gap-1 hover:text-(--bc-accent)"><FaTachometerAlt /> Dashboard</NavLink></li>
       <li><NavLink to="/coverage" className="flex items-center dark:text-(--color-primary) gap-1 hover:text-(--bc-accent)"><FaMapMarkedAlt /> Coverage</NavLink></li>
+       <li><NavLink to="/dashboard" className="flex items-center dark:text-(--color-primary) gap-1 hover:text-(--bc-accent)"><FaTachometerAlt /> Dashboard</NavLink></li>
     </>
   );
 

@@ -62,3 +62,7 @@ Manage all books (publish/unpublish/delete books and associated orders).
 
 Profile management.
 
+## Dependencies:
+
+--npm install react-slick slick-carousel
+--npm install leaflet react-leaflet
