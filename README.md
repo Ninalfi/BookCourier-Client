@@ -1,16 +1,64 @@
-# React + Vite
+###BookCourier – Library-to-Home Delivery System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+##🚀Project Overview
 
-Currently, two official plugins are available:
+BookCourier is a library delivery management system designed to help students, researchers, and readers borrow and return books without physically visiting the library. Users can request book pickup or delivery from nearby libraries, making reading more accessible and convenient.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project includes features for general users, librarians, and admins with a modern and responsive design, ensuring smooth navigation and a professional interface.
 
-## React Compiler
+##🌐 Live URL
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+##✨ Purpose
+The primary purpose of BookCourier is to revolutionize the book borrowing process by offering a seamless, end-to-end delivery service. It serves three main user roles—Reader, Librarian, and Admin—with tailored dashboards to manage orders, inventory, and users efficiently.
 
-## Expanding the ESLint configuration
+##🔑 Key Features
+💻 Core Functionality
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+General Features
+
+User authentication: Email/password login & social login.
+
+Secure registration with strong password validation.
+
+Profile management with image upload.
+
+Responsive design for mobile, tablet, and desktop.
+
+Light and dark mode toggle.
+
+Interactive homepage with banner sliders and animated sections.
+
+Latest books showcase and city coverage map.
+
+Search and sort functionality for books.
+
+Book wishlist and rating/review system.
+
+User Dashboard
+
+View and manage orders (Cancel/Pay).
+
+See payment invoices.
+
+Update profile details.
+
+Wishlist of books added from Book Details page.
+
+Librarian Dashboard
+
+Add new books with details (image, name, author, price, status).
+
+Manage books (edit, publish/unpublish).
+
+View and manage orders for books added.
+
+Update order status from "pending" → "shipped" → "delivered".
+
+Admin Dashboard
+
+Manage all users (assign roles as Librarian/Admin).
+
+Manage all books (publish/unpublish/delete books and associated orders).
+
+Profile management.
+
