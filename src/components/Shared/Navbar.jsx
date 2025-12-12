@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
-import Logo from "../Logo/Logo";
+import { Link, NavLink } from "react-router";
+
 import {
   FaSun, FaMoon, FaHome, FaBook, FaTachometerAlt, FaMapMarkedAlt,
   FaPhoneAlt, FaEnvelope, FaClock, FaComments, FaHeart, FaShoppingCart, FaBars
 } from "react-icons/fa";
+import Logo from "./Logo";
+import { useAuth } from "../../contexts/AuthProvider";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
   const [theme, setTheme] = useState("light");
+   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
@@ -37,21 +39,20 @@ const Navbar = () => {
   return (
     <div className="w-full shadow-md">
 
-      {/* ====== TOP BAR ====== */}
       <div className="bg-(--color-primary) text-(--bc-surface) text-sm py-2">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
 
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1">
-              <FaPhoneAlt /> +208-6666-0112
+              <FaPhoneAlt /> +880 1234 567890
             </span>
 
             <span className="flex items-center gap-1">
-              <FaEnvelope /> info@example.com
+              <FaEnvelope /> book_courier@gmail.com
             </span>
 
             <span className="hidden md:flex items-center gap-1">
-              <FaClock /> Sunday – Fri: 9 AM – 6 PM
+              <FaClock /> Sat – Fri: 7 AM – 11 PM
             </span>
           </div>
 
@@ -59,16 +60,6 @@ const Navbar = () => {
             <span className="flex items-center gap-1 cursor-pointer">
               <FaComments /> Live Chat
             </span>
-
-            {user ? (
-              <button onClick={logOut} className="flex items-center gap-1">
-                Log Out
-              </button>
-            ) : (
-              <Link to="/auth/login" className="flex items-center gap-1">
-                Login
-              </Link>
-            )}
           </div>
 
         </div>
@@ -115,17 +106,70 @@ const Navbar = () => {
                 0
               </span>
             </div>
+            {/* auth */}
+            <div>
+                 {!user ? (
+            <div className="flex gap-4">
+              <NavLink to="/login" className="btn-outline">Login</NavLink>
+              <NavLink to="/register" className="btn-primary">Register</NavLink>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <div className="relative group">
+                <img
+                  src={user?.photoURL}
+                  alt={user.displayName}
+                  className="w-10 h-10 rounded-full border cursor-pointer"
+                />
+                <span className="absolute hidden group-hover:block bg-black text-white text-sm px-2 py-1 rounded-md -bottom-10 left-1/2 transform -translate-x-1/2">
+                  {user?.displayName}
+                </span>
+              </div>
+            <button 
+            className="btn-outline" 
+            onClick={() => {
+                logOut()
+                .then(() => {
+                    console.log("Logged out successfully");
+                })
+                .catch(err => console.error(err));
+            }}
+            >
+        Logout
+        </button>
+            </div>
+          )}
+        </div>
+            </div>
 
             {/* Mobile Toggle */}
-            <div className="lg:hidden p-3 border rounded-full border-(--color-primary)">
-              <FaBars className="text-(--color-primary)" />
-            </div>
+            {menuOpen && (
+        <div className="bg-gray-100 dark:bg-gray-800 p-4 flex flex-col gap-3 md:hidden">
+
+          {links}
+            <ThemeToggle></ThemeToggle>
+
+          {!user ? (
+            <>
+              <NavLink to="/login" className="btn-outline">Login</NavLink>
+              <NavLink to="/register" className="btn-primary">Register</NavLink>
+            </>
+          ) : (
+            <>
+              <div className="flex gap-3 items-center">
+                <img src={user?.photoURL} className="w-10 h-10 rounded-full border" />
+                <p>{user?.displayName}</p>
+              </div>
+              <button className="btn-outline" onClick={logOut}>Logout</button>
+            </>
+          )}
+        </div>
+      )}
 
           </div>
         </div>
       </div>
 
-    </div>
   );
 };
 
