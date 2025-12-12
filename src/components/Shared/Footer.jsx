@@ -2,6 +2,7 @@ import React from 'react';
 import { FaFacebook, FaGithub } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { Link } from 'react-router';
+import Logo from './Logo';
 
 const Footer = () => {
     return (
@@ -10,9 +11,8 @@ const Footer = () => {
 
         <div class="col-span-1 space-y-4">
             <div class="flex items-center space-x-2">
-                <div class="text-3xl font-bold text-orange-400">
-                    <img src="YOUR_LOGO_URL" alt="BookCourier Logo" class="h-8 w-8 inline-block mr-2" />
-                    BookCourier
+                <div class="text-3xl font-bold bg-orange-200">
+                    <Logo></Logo>
                 </div>
             </div>
             <p class="text-sm text-gray-400 max-w-xs">
