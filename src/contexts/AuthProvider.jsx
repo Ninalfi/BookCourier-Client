@@ -36,6 +36,8 @@ const AuthProvider = ({ children }) => {
 //       .finally(() => setLoading(false));
 //   };
 
+
+
     const logOut = () => {
         setLoading(true);
         return signOut(auth)
@@ -43,9 +45,12 @@ const AuthProvider = ({ children }) => {
       .finally(() => setLoading(false));
     }
 
-    const updateUserProfile = (profile) =>{
-        return updateProfile(auth.currentUser, profile)
-    }
+      const updateUserProfile = (name, photoURL) => {
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: photoURL,
+    });
+  };
 
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -58,7 +63,7 @@ const AuthProvider = ({ children }) => {
     }, [])
 
     const authInfo = {
-        user,
+        user: auth.currentUser,
         loading,
         registerUser,
         signInUser,

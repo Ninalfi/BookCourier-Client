@@ -8,6 +8,8 @@ import Coverage from "../pages/coverage/Coverage";
 import UserDashboard from "../dashboard/UserDashboard/UserDashboard";
 import MyOrders from "../dashboard/UserDashboard/MyOrders";
 import MyProfile from "../dashboard/UserDashboard/MyProfile";
+import Invoices from "../dashboard/UserDashboard/Invoices";
+import DashboardHome from "../dashboard/UserDashboard/DashboardHome";
 
 export const router = createBrowserRouter([
   {
@@ -44,12 +46,20 @@ export const router = createBrowserRouter([
     Component: UserDashboard,
     children:[
       {
+        index: true,
+        Component: DashboardHome
+      },
+      {
         path: 'orders',
         Component: MyOrders
       },
       {
         path: 'profile',
         Component: MyProfile
+      },
+      {
+        path: 'invoices',
+        Component: Invoices
       }
     ]
   }
