@@ -44,6 +44,16 @@ const UserDashboard = () => {
                 Invoices
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="wishlist"
+                className={({ isActive }) =>
+                  isActive ? "active font-semibold" : ""
+                }
+              >
+                My Wishlist
+              </NavLink>
+            </li>
           </ul>
         </aside>
         <main className="flex-1 bg-base-100 p-6">

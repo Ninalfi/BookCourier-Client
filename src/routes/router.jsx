@@ -10,6 +10,8 @@ import MyOrders from "../dashboard/UserDashboard/MyOrders";
 import MyProfile from "../dashboard/UserDashboard/MyProfile";
 import Invoices from "../dashboard/UserDashboard/Invoices";
 import DashboardHome from "../dashboard/UserDashboard/DashboardHome";
+import Wishlist from "../dashboard/UserDashboard/Wishlist";
+import PrivateRoute from "../layouts/PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -43,7 +45,11 @@ export const router = createBrowserRouter([
   },
   {
     path: 'dashboard',
-    Component: UserDashboard,
+    element: (
+      <PrivateRoute>
+        <UserDashboard></UserDashboard>
+      </PrivateRoute>
+    ),
     children:[
       {
         index: true,
@@ -60,6 +66,10 @@ export const router = createBrowserRouter([
       {
         path: 'invoices',
         Component: Invoices
+      },
+      {
+        path: 'wishlist',
+        Component: Wishlist
       }
     ]
   }
