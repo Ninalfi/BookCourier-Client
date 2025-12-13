@@ -3,6 +3,8 @@ import Banner from './Banner';
 import { CoverageMap } from './CoverageMap';
 import { NavLink } from 'react-router';
 import WhyUs from './WhyUs';
+import ExchangeOffers from './ExchangeOffers';
+import Reviews from './Reviews';
 
 const Home = () => {
     return (
@@ -10,6 +12,8 @@ const Home = () => {
             <Banner></Banner>
             <NavLink to='/coverage'><CoverageMap></CoverageMap></NavLink>
             <WhyUs></WhyUs>
+            <ExchangeOffers></ExchangeOffers>
+            <Reviews></Reviews>
         </div>
     );
 };
