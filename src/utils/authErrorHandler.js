@@ -1,4 +1,4 @@
-// src/utils/authErrorHandler.js
+
 
 export const getAuthErrorMessage = (error) => {
   if (!error || !error.code) return "Something went wrong. Please try again.";

@@ -5,6 +5,9 @@ import AuthLayout from "../layouts/AuthLayout";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import Coverage from "../pages/coverage/Coverage";
+import UserDashboard from "../dashboard/UserDashboard/UserDashboard";
+import MyOrders from "../dashboard/UserDashboard/MyOrders";
+import MyProfile from "../dashboard/UserDashboard/MyProfile";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +37,20 @@ export const router = createBrowserRouter([
             path: 'register',
             Component: Register
         }
+    ]
+  },
+  {
+    path: 'dashboard',
+    Component: UserDashboard,
+    children:[
+      {
+        path: 'orders',
+        Component: MyOrders
+      },
+      {
+        path: 'profile',
+        Component: MyProfile
+      }
     ]
   }
 ]);
