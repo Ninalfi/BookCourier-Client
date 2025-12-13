@@ -27,7 +27,7 @@ const Coverage = () => {
         <h2 className="text-5xl">We are available in 64 districts</h2>
         <div>
           <form onSubmit={handleSearch}>
-            <label className="input">
+            <label className="input  mt-3">
             <svg
               className="h-[1em] opacity-50"
               xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +50,6 @@ const Coverage = () => {
           </form>
         </div>
         <div className="border w-full h-200 mt-10">
-            <h3 className="text-2xl mt-5 mb-5 font-bold">We deliver almost all over Bangladesh</h3>
           <MapContainer
             center={position}
             zoom={8}

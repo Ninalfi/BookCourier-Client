@@ -96,6 +96,7 @@ const Footer = () => {
     <div className=' w-full mx-auto mt-10'>
         <aside>
     <p className='text-center'>Copyright © {new Date().getFullYear()} - All right reserved by BookCourier Industries Ltd</p>
+   
   </aside>
     </div>
 </footer>

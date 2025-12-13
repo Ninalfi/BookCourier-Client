@@ -6,46 +6,53 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 const slides = [
   {
     id: 1,
-    img: "https://unsplash.com/photos/a-stack-of-books-sitting-on-top-of-a-wooden-table-BbVUxPwQiDM",
+    img: "https://i.ibb.co.com/p6G9FgK8/best.jpg",
     title: "Discover Bestsellers",
     desc: "Handpicked bestsellers delivered to your door.",
     btn_text: "Discover Now",
   },
   {
     id: 2,
-    img: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80",
+    img: "https://i.ibb.co.com/bjRb6wn1/rare.jpg",
     title: "Rare & Classic",
     desc: "Find rare editions and timeless classics.",
     btn_text: "Explore Now",
   },
  {
     id: 3,
-    img: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80",
+    img: "https://i.ibb.co.com/TBYWMY1B/sale.jpg",
     title: "Hot Deals",
     desc: "Limited-time deals for avid readers.",
     btn_text: "Shop Now",
   },
    {
     id: 4,
-    img: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80",
+    img: "https://i.ibb.co.com/B2Cq1d45/olena-bohovyk-Ft-Wn-K5-YH8-unsplash.jpg",
     title: "New Arrivals",
     desc: "Check out the latest books added to our collection.",
     btn_text: "Browse Now",
   },
     {
     id: 5,
-    img: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1200&q=80",
+    img: "https://i.ibb.co.com/m5y0g0sd/exchange.jpg",
     title: "Exchange Offers",
     desc: "Exchange old books and get new titles at amazing rates.",
     btn_text: "Grab Now",
   },
     {
     id: 6,
-    img: "https://images.unsplash.com/photo-1581091215366-7f7480f1b29c?auto=format&fit=crop&w=1200&q=80",
+    img: "https://i.ibb.co.com/1Y5NnrBJ/limited.jpg",
     title: "Limited Edition",
     desc: "Rare and collectible editions you won't find anywhere else.",
     btn_text: "Explore Now",
   },
+  {
+    id: 7,
+    img: "https://i.ibb.co.com/5hKBpMQH/kids.jpg",
+    title: "Kids Corner",
+    desc: "A delightful collection for young readers.",
+    btn_text: "Shop Kids' Books",
+  }
 ];
 
 const Banner = () => {

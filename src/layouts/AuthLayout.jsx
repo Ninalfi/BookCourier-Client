@@ -1,11 +1,11 @@
 import React from 'react';
 import Logo from '../components/Shared/Logo';
-import { Outlet } from 'react-router';
+import { NavLink, Outlet } from 'react-router';
 
 const AuthLayout = () => {
     return (
         <div className='max-w-7xl p-8 mx-auto'>
-            <button onClick='/'><Logo></Logo></button>
+            <NavLink to='/'><Logo></Logo></NavLink>
             <div className='flex '>
                 <div className='flex-1'>
                     <Outlet></Outlet>

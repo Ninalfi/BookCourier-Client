@@ -30,7 +30,7 @@ const Register = () => {
         photoURL: data.photo
       });
 
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       setError("Registration failed. Try again.");
     }
@@ -74,6 +74,13 @@ const Register = () => {
             {errors.name && <p className="text-(--bc-accent) text-sm mt-1">{errors.name.message}</p>}
           </div>
 
+          {/**Photo file update */}
+          {/* <label className="label">
+              <span className="label-text text-(--bc-text)">Upload Photo</span>
+            </label>
+          <input type="file"{...formRegister('photo',{required:true})} className="file-input file-input-bordered w-full text-(--bc-text) border-(--color-secondary) focus:border-(--color-primary)" />
+           {errors.name?.type==='required' && <p className="text-(--bc-accent) text-sm mt-1">Photo is required</p>} */}
+           
           {/* Photo URL */}
           <div>
             <label className="label">
@@ -124,7 +131,7 @@ const Register = () => {
               onClick={() => setShowPass(!showPass)}
               className="absolute inset-y-10 right-3"
             >
-              {showPass ? <FaRegEyeSlash className="text-gray-500" /> : <FaEye className="text-gray-500" />}
+              <span>{showPass ? <FaRegEyeSlash className="text-gray-500" /> : <FaEye className="text-gray-500" />}</span>
             </button>
 
             {errors.password && (

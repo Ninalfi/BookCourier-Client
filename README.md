@@ -66,3 +66,4 @@ Profile management.
 
 --npm install react-slick slick-carousel
 --npm install leaflet react-leaflet
+--npm install framer-motion
