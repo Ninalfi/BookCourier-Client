@@ -17,7 +17,8 @@ export const router = createBrowserRouter([
         },
         {
             path: 'coverage',
-            Component: Coverage
+            Component: Coverage,
+            loader: () => fetch('/coverage.json').then (res => res.json ())
         }
     ]
   },
