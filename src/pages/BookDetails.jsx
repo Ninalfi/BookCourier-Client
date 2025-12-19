@@ -1,74 +1,72 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { doc, getDoc, collection, addDoc } from "firebase/firestore";
-import { useAuth } from "../contexts/AuthProvider";
-
 
 const BookDetails = () => {
   const { id } = useParams();
-  const { user } = useAuth();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [ordering, setOrdering] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [orderData, setOrderData] = useState({
+    name: "User Name",
+    email: "user@example.com",
+    phone: "",
+    address: "",
+  });
 
   useEffect(() => {
     const fetchBook = async () => {
-      const docRef = doc(db, "books", id);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setBook({ id: docSnap.id, ...docSnap.data() });
+      try {
+        const res = await fetch(`http://localhost:3000/books/${id}`);
+        const data = await res.json();
+        setBook(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     fetchBook();
   }, [id]);
 
-  const handlePlaceOrder = async () => {
-    if (!phone || !address) return alert("Please fill all fields!");
-    setOrdering(true);
+  const handleChange = (e) => {
+    setOrderData({ ...orderData, [e.target.name]: e.target.value });
+  };
+
+  const placeOrder = async () => {
     try {
-      await addDoc(collection(db, "orders"), {
-        bookId: book.id,
-        bookTitle: book.title,
-        userId: user.uid,
-        name: user.displayName,
-        email: user.email,
-        phone,
-        address,
-        status: "pending",
-        payment: "unpaid",
-        createdAt: new Date()
+      await fetch("http://localhost:3000/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...orderData, bookId: book._id, userId: "123456" }),
       });
-      setModalOpen(false);
-      setPhone("");
-      setAddress("");
+      setShowModal(false);
       alert("Order placed successfully!");
     } catch (err) {
       console.error(err);
-      alert("Failed to place order.");
     }
-    setOrdering(false);
   };
 
-  if (loading) return <p className="text-center py-10">Loading book...</p>;
-  if (!book) return <p className="text-center py-10">Book not found.</p>;
+  if (loading) return <p className="text-center py-10">Loading...</p>;
+  if (!book) return <p className="text-center py-10">Book not found</p>;
 
   return (
-    <div className="max-w-5xl mx-auto p-4">
+    <div className="max-w-4xl mx-auto py-10 px-4 bg-[var(--bc-bg)] rounded-lg shadow-md">
       <div className="flex flex-col md:flex-row gap-6">
-        <img src={book.img} alt={book.title} className="w-full md:w-1/3 h-80 object-cover rounded-lg" />
-        <div className="md:flex-1">
-          <h2 className="text-3xl font-bold">{book.title}</h2>
-          <p className="text-gray-600 mt-1">By {book.author}</p>
-          <p className="text-[var(--color-primary)] font-semibold mt-2">{book.price}</p>
-          <p className="mt-4">{book.desc}</p>
-
+        <img
+          src={book.img || "https://via.placeholder.com/200"}
+          alt={book.title}
+          className="w-full md:w-1/3 h-auto object-cover rounded-lg shadow-sm"
+        />
+        <div className="flex-1">
+          <h1 className="text-[var(--color-primary)] text-3xl font-bold mb-2">{book.title}</h1>
+          <p className="text-[var(--bc-text)] text-lg mb-1"><strong>Author:</strong> {book.author}</p>
+          <p className="text-[var(--bc-text)] text-lg mb-1"><strong>Category:</strong> {book.category}</p>
+          <p className="text-[var(--bc-text)] text-lg mb-1"><strong>Language:</strong> {book.language}</p>
+          <p className="text-[var(--bc-accent)] text-xl font-semibold mt-4">{book.price}</p>
+          <p className="text-[var(--bc-text)] mt-4">{book.desc}</p>
           <button
-            onClick={() => setModalOpen(true)}
-            className="mt-6 px-6 py-2 bg-[var(--color-primary)] hover:bg-[var(--bc-accent)] text-white rounded-lg transition"
+            onClick={() => setShowModal(true)}
+            className="mt-6 px-6 py-2 rounded-lg bg-[var(--color-primary)] text-white font-semibold hover:bg-[var(--bc-accent)] transition"
           >
             Order Now
           </button>
@@ -76,41 +74,54 @@ const BookDetails = () => {
       </div>
 
       {/* Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-[var(--bc-surface)] rounded-xl shadow-xl p-6 w-full max-w-md">
-            <h3 className="text-2xl font-bold mb-4">Place Order</h3>
-            <div className="space-y-3">
-              <input type="text" value={user.displayName} readOnly className="input input-bordered w-full" />
-              <input type="email" value={user.email} readOnly className="input input-bordered w-full" />
-              <input
-                type="text"
-                placeholder="Phone Number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="input input-bordered w-full"
-              />
-              <textarea
-                placeholder="Address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className="input input-bordered w-full h-24"
-              />
-              <div className="flex justify-end gap-2 mt-4">
-                <button
-                  onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-lg border"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handlePlaceOrder}
-                  disabled={ordering}
-                  className="px-4 py-2 rounded-lg bg-[var(--color-primary)] hover:bg-[var(--bc-accent)] text-white"
-                >
-                  {ordering ? "Placing..." : "Place Order"}
-                </button>
-              </div>
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-[var(--bc-surface)] p-6 rounded-lg w-full max-w-md shadow-lg relative">
+            <h2 className="text-[var(--color-primary)] text-2xl font-bold mb-4">Place Your Order</h2>
+            <input
+              type="text"
+              name="name"
+              value={orderData.name}
+              readOnly
+              className="w-full mb-3 p-2 border border-gray-300 rounded"
+              placeholder="Name"
+            />
+            <input
+              type="email"
+              name="email"
+              value={orderData.email}
+              readOnly
+              className="w-full mb-3 p-2 border border-gray-300 rounded"
+              placeholder="Email"
+            />
+            <input
+              type="text"
+              name="phone"
+              value={orderData.phone}
+              onChange={handleChange}
+              className="w-full mb-3 p-2 border border-gray-300 rounded"
+              placeholder="Phone Number"
+            />
+            <textarea
+              name="address"
+              value={orderData.address}
+              onChange={handleChange}
+              className="w-full mb-3 p-2 border border-gray-300 rounded"
+              placeholder="Address"
+            />
+            <div className="flex justify-end gap-3 mt-4">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={placeOrder}
+                className="px-4 py-2 rounded bg-[var(--bc-accent)] text-white hover:bg-[var(--color-primary)] transition"
+              >
+                Place Order
+              </button>
             </div>
           </div>
         </div>

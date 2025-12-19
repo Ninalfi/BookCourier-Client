@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { useAuth } from "../contexts/AuthProvider";
 import useAxiosSecure from "./useAxiosSecure";
-import useAuth from "./useAuth";
+
 
 export default function useRole() {
   const { user } = useAuth();
@@ -9,12 +10,12 @@ export default function useRole() {
 
   useEffect(() => {
     if (user?.email) {
-      axiosSecure.get("/users").then(res => {
-        const current = res.data.find(u => u.email === user.email);
-        setRole(current?.role || "user");
-      });
+      axiosSecure
+        .get(`/users/${user.email}`)
+        .then(res => setRole(res.data?.role || "user"))
+        .catch(err => console.error("Failed to fetch user role:", err));
     }
-  }, [user]);
+  }, [user, axiosSecure]);
 
   return role;
 }

@@ -17,6 +17,7 @@ import MyBooks from "../dashboard/LibrarianDashboard/MyBooks";
 import ManageBooks from "../dashboard/AdminDashboard/ManageBooks";
 import ManageUsers from "../dashboard/AdminDashboard/ManageUsers";
 import AllBooks from "../pages/AllBooks";
+import BookDetails from "../pages/BookDetails";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
         {
           path: 'books',
           Component: AllBooks
+        },
+        {
+          path: 'books/:id',
+          Component: BookDetails
         },
         {
             path: 'coverage',
