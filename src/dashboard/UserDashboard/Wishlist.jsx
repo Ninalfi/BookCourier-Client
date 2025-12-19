@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthProvider";
 import { FaHeartBroken, FaTrashAlt } from "react-icons/fa";
 
-const MyWishlist = () => {
+const Wishlist = () => {
   const { user } = useAuth();
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,7 +11,7 @@ const MyWishlist = () => {
   useEffect(() => {
     if (!user?.email) return;
 
-    fetch(`https://your-api-url/wishlist?email=${user.email}`)
+    fetch(`http://localhost:3000/wishlist?email=${user.email}`)
       .then(res => res.json())
       .then(data => {
         setWishlist(data);
@@ -21,7 +21,7 @@ const MyWishlist = () => {
 
   // Remove item
   const handleRemove = (id) => {
-    fetch(`https://your-api-url/wishlist/${id}`, {
+    fetch(`http://localhost:3000/wishlist/${id}`, {
       method: "DELETE",
     })
       .then(res => res.json())
@@ -39,7 +39,7 @@ const MyWishlist = () => {
           My Wishlist
         </h2>
         <p className="text-[var(--bc-text)]/70">
-          Books saved for later
+          Books you saved for later
         </p>
       </div>
 
@@ -110,4 +110,4 @@ const MyWishlist = () => {
   );
 };
 
-export default MyWishlist;
+export default Wishlist;

@@ -16,6 +16,7 @@ import AddBook from "../dashboard/LibrarianDashboard/AddBook";
 import MyBooks from "../dashboard/LibrarianDashboard/MyBooks";
 import ManageBooks from "../dashboard/AdminDashboard/ManageBooks";
 import ManageUsers from "../dashboard/AdminDashboard/ManageUsers";
+import AllBooks from "../pages/AllBooks";
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ export const router = createBrowserRouter([
         {
             index: true,
             Component: Home
+        },
+        {
+          path: 'books',
+          Component: AllBooks
         },
         {
             path: 'coverage',
