@@ -20,6 +20,7 @@ import BookDetails from "../pages/BookDetails";
 import Orders from "../dashboard/LibrarianDashboard/Orders";
 import DashboardHome from "../dashboard/DashboardHome";
 import CartPage from "../pages/CartPage";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 
 export const router = createBrowserRouter([
@@ -68,7 +69,7 @@ export const router = createBrowserRouter([
     path: '/dashboard',
     element: (
       <PrivateRoute>
-        <UserDashboard></UserDashboard>
+        <DashboardLayout></DashboardLayout>
       </PrivateRoute>
     ),
     children:[

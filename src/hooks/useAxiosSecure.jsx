@@ -3,7 +3,7 @@ import { getAuth } from 'firebase/auth';
 import React from 'react';
 
 const axiosSecure = axios.create({
-  baseURL: 'https://localhost:3000',
+  baseURL: 'http://localhost:3000',
 });
 
 axiosSecure.interceptors.request.use(async config => {

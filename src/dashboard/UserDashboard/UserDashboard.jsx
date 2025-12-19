@@ -14,7 +14,7 @@ const UserDashboard = () => {
           <ul className="menu space-y-1">
             <li>
               <NavLink
-                to="orders"
+                to="my-orders"
                 className={({ isActive }) =>
                   isActive ? "active font-semibold" : ""
                 }

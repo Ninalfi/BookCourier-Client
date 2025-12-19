@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
+import OrderModal from "./modals/OrderModal";
+import { useAuth } from "../contexts/AuthProvider";
+import { useNavigate } from "react-router";
 
 const BookDetails = () => {
   const { id } = useParams();
-  const { cart, addToCart } = useCart(); 
+  const { addToCart, clearCart  } = useCart(); 
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
    const [quantity, setQuantity] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [orderData, setOrderData] = useState({
-    name: {},
-    email: "user@example.com",
+    name: user?.displayName || "",
+    email:  user?.email || "",
     phone: "",
     address: "",
   });
@@ -30,6 +35,14 @@ const BookDetails = () => {
     };
     fetchBook();
   }, [id]);
+
+   useEffect(() => {
+    setOrderData((prev) => ({
+      ...prev,
+      name: user?.displayName || "",
+      email: user?.email || "",
+    }));
+  }, [user]);
 
   const handleChange = (e) => {
     setOrderData({ ...orderData, [e.target.name]: e.target.value });
@@ -50,13 +63,15 @@ const BookDetails = () => {
 
   const placeOrder = async () => {
     try {
-      await fetch("http://localhost:3000/orders", {
+      await fetch("http://localhost:3000/my-orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...orderData, bookId: book._id, userId: "123456" }),
+        body: JSON.stringify({ ...orderData, bookId: book._id, userId: "123456", quantity, bookTitle: book.title, price: book.price, name: orderData.name, orderStatus:"pending",paymentStatus: "unpaid" }),
       });
       setShowModal(false);
       alert("Order placed successfully!");
+      clearCart();
+      navigate("/dashboard/my-orders");
     } catch (err) {
       console.error(err);
     }
@@ -124,58 +139,13 @@ const BookDetails = () => {
         </div>
 
       {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-(--bc-surface) p-6 rounded-lg w-full max-w-md shadow-lg relative">
-            <h2 className="text-(--color-primary) text-2xl font-bold mb-4">Place Your Order</h2>
-            <input
-              type="text"
-              name="name"
-              value={orderData.name}
-              readOnly
-              className="w-full mb-3 p-2 border border-gray-300 rounded"
-              placeholder="Name"
-            />
-            <input
-              type="email"
-              name="email"
-              value={orderData.email}
-              readOnly
-              className="w-full mb-3 p-2 border border-gray-300 rounded"
-              placeholder="Email"
-            />
-            <input
-              type="text"
-              name="phone"
-              value={orderData.phone}
-              onChange={handleChange}
-              className="w-full mb-3 p-2 border border-gray-300 rounded"
-              placeholder="Phone Number"
-            />
-            <textarea
-              name="address"
-              value={orderData.address}
-              onChange={handleChange}
-              className="w-full mb-3 p-2 border border-gray-300 rounded"
-              placeholder="Address"
-            />
-            <div className="flex justify-end gap-3 mt-4">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 transition"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={placeOrder}
-                className="px-4 py-2 rounded bg-[var(--bc-accent)] text-white hover:bg-[var(--color-primary)] transition"
-              >
-                Place Order
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <OrderModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        orderData={orderData}
+        handleChange={handleChange}
+        placeOrder={placeOrder}
+      />
     </div>
   );
 };

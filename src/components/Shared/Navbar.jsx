@@ -55,7 +55,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="bg-(--bc-bg) py-4 px-4 flex justify-between items-center w-11/12 mx-auto">
+      <div className="bg-(--bc-bg) py-4 px-4 flex justify-between items-center w-full mx-auto">
 
         <Link to="/" className="flex items-center text-2xl font-bold text-(--bc-text)">
           <Logo />

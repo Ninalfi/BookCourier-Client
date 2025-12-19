@@ -13,7 +13,7 @@ const Sidebar = () => {
       {/* USER */}
       {role === "user" && (
         <>
-          <NavLink to="/dashboard/orders">My Orders</NavLink>
+          <NavLink to="/dashboard/my-orders">My Orders</NavLink>
           <NavLink to="/dashboard/wishlist">My Wishlist</NavLink>
           <NavLink to="/dashboard/invoices">Invoices</NavLink>
           <NavLink to="/dashboard/profile">My Profile</NavLink>
