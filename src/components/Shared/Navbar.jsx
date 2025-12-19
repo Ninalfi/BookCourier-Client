@@ -6,6 +6,7 @@ import {
 } from "react-icons/fa";
 import Logo from "./Logo";
 import { useAuth } from "../../contexts/AuthProvider";
+import { useCart } from "../../contexts/CartContext";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
@@ -33,8 +34,14 @@ const Navbar = () => {
       <li><NavLink to="/coverage" className="flex items-center dark:text-(--color-primary) gap-1 hover:text-(--bc-accent)"><FaMapMarkedAlt /> Coverage</NavLink></li>
        <li><NavLink to="/dashboard" className="flex items-center dark:text-(--color-primary) gap-1 hover:text-(--bc-accent)"><FaTachometerAlt /> Dashboard</NavLink></li>
     </>
+
   );
 
+  const {cart} = useCart();
+    const totalItems = cart.reduce(
+    (sum, item) => sum + (item.quantity || 1),
+    0
+  );
   return (
     <div className="w-full shadow-md">
     <div className="text-(--bc-surface) text-sm bg-(--color-primary) py-2 px-4 flex justify-between items-center">
@@ -72,10 +79,14 @@ const Navbar = () => {
             <span className="absolute top-0 right-0 bg-(--bc-accent) text-white rounded-full px-1 text-xs">0</span>
           </div>
 
-          <div className="relative p-3 border rounded-full border-(--color-primary)">
+          <Link to="/cart" className="relative p-3 border rounded-full border-(--color-primary)">
             <FaShoppingCart className="text-(--color-primary)" />
-            <span className="absolute top-0 right-0 bg-(--bc-accent)text-white rounded-full px-1 text-xs">0</span>
-          </div>
+             {totalItems > 0 && (
+            <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+              {totalItems}
+            </span>
+            )}
+          </Link>
 
           <div className="hidden md:flex">
             {!user ? (

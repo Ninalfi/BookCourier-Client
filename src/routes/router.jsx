@@ -19,6 +19,7 @@ import AllBooks from "../pages/AllBooks";
 import BookDetails from "../pages/BookDetails";
 import Orders from "../dashboard/LibrarianDashboard/Orders";
 import DashboardHome from "../dashboard/DashboardHome";
+import CartPage from "../pages/CartPage";
 
 
 export const router = createBrowserRouter([
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
             path: 'coverage',
             Component: Coverage,
             loader: () => fetch('/coverage.json').then (res => res.json ())
+        },
+        {
+          path:'cart',
+          Component: CartPage
         }
     ]
   },

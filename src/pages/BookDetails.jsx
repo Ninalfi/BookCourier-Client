@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useCart } from "../contexts/CartContext";
 
 const BookDetails = () => {
   const { id } = useParams();
+  const { cart, addToCart } = useCart(); 
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
    const [quantity, setQuantity] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [orderData, setOrderData] = useState({
-    name: "User Name",
+    name: {},
     email: "user@example.com",
     phone: "",
     address: "",
@@ -33,6 +35,19 @@ const BookDetails = () => {
     setOrderData({ ...orderData, [e.target.name]: e.target.value });
   };
 
+   const handleAddToCart = () => {
+    addToCart({ ...book, quantity });
+    alert(`${book.title} added to cart`);
+  };
+
+   const handleOrderNow = () => {
+    setShowModal(true);
+  };
+
+     const handleQuantityChange = (amount) => {
+    setQuantity(prev => Math.max(1, prev + amount));
+  };
+
   const placeOrder = async () => {
     try {
       await fetch("http://localhost:3000/orders", {
@@ -50,9 +65,7 @@ const BookDetails = () => {
   if (loading) return <p className="text-center py-10">Loading...</p>;
   if (!book) return <p className="text-center py-10">Book not found</p>;
 
-   const handleQuantityChange = (amount) => {
-    setQuantity(prev => Math.max(1, prev + amount));
-  };
+
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-4 bg-(--bc-bg) rounded-lg shadow-md">
@@ -74,22 +87,20 @@ const BookDetails = () => {
              <button
                 onClick={() => handleQuantityChange(-1)}
                 className="px-4 py-2 hover:bg-gray-100"
-              >
-                -
-              </button>
+              > -</button>
                <span className="px-4 py-2">{quantity}</span>
               <button
                 onClick={() => handleQuantityChange(1)}
                 className="px-4 py-2 hover:bg-gray-100"
-              >
-                +
-              </button>
+              > + </button>
             </div>
          <button className="px-4 py-2 border rounded-lg hover:bg-gray-100">
               Read A Little
             </button>
              {/* Add to Cart */}
-            <button className="px-6 py-2 bg-[var(--color-primary)] text-white font-semibold rounded-lg hover:bg-blue-700 flex items-center gap-2">
+            <button
+            onClick={handleAddToCart}
+             className="px-6 py-2 bg-(--color-primary) text-white font-semibold rounded-lg hover:bg-blue-700 flex items-center gap-2">
               <span className="text-xl">🛒</span> Add To Cart
             </button>
           </div>
@@ -104,7 +115,7 @@ const BookDetails = () => {
 
           
           <button
-            onClick={() => setShowModal(true)}
+            onClick={handleOrderNow}
             className="mt-6 px-6 py-2 w-full rounded-lg bg-(--color-primary) text-white font-semibold hover:bg-(--bc-accent) transition"
           >
             Order Now
