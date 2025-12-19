@@ -4,39 +4,52 @@ import useRole from "../hooks/useRole";
 export default function DashboardLayout() {
   const role = useRole();
 
+  const sidebarLinks = {
+    user: [
+      { name: "Dashboard", path: "/dashboard" },
+      { name: "My Orders", path: "/dashboard/orders" },
+      { name: "My Profile", path: "/dashboard/profile" },
+      { name: "Invoices", path: "/dashboard/invoices" },
+    ],
+    librarian: [
+      { name: "Dashboard", path: "/dashboard" },
+      { name: "Add Book", path: "/dashboard/add-book" },
+      { name: "My Books", path: "/dashboard/my-books" },
+      { name: "Orders", path: "/dashboard/librarian-orders" },
+    ],
+    admin: [
+      { name: "Dashboard", path: "/dashboard" },
+      { name: "All Users", path: "/dashboard/all-users" },
+      { name: "Manage Books", path: "/dashboard/manage-books" },
+      { name: "My Profile", path: "/dashboard/profile" },
+    ],
+  };
+
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 text-white p-5">
-        <h2 className="text-xl font-bold mb-6">Dashboard</h2>
-
-        {role === "user" && (
-          <>
-            <NavLink to="orders">My Orders</NavLink><br />
-            <NavLink to="wishlist">Wishlist</NavLink><br />
-            <NavLink to="profile">My Profile</NavLink>
-          </>
-        )}
-
-        {role === "librarian" && (
-          <>
-            <NavLink to="add-book">Add Book</NavLink><br />
-            <NavLink to="my-books">My Books</NavLink><br />
-            <NavLink to="librarian-orders">Orders</NavLink>
-          </>
-        )}
-
-        {role === "admin" && (
-          <>
-            <NavLink to="users">All Users</NavLink><br />
-            <NavLink to="manage-books">Manage Books</NavLink><br />
-            <NavLink to="profile">My Profile</NavLink>
-          </>
-        )}
+    <div className="flex min-h-screen bg-gray-100">
+   
+      <aside className="w-64 bg-[var(--bc-surface)] p-6 shadow-lg">
+        <h2 className="text-2xl font-bold mb-6 text-[var(--color-primary)]">Dashboard</h2>
+        <p className="mb-4 text-gray-500 capitalize">Role: {role}</p>
+        <nav className="flex flex-col gap-2">
+          {sidebarLinks[role].map((link) => (
+            <NavLink
+              key={link.name}
+              to={link.path}
+              className={({ isActive }) =>
+                `p-2 rounded hover:bg-[var(--color-primary)] hover:text-white ${
+                  isActive ? "bg-[var(--color-primary)] text-white" : "text-gray-700"
+                }`
+              }
+            >
+              {link.name}
+            </NavLink>
+          ))}
+        </nav>
       </aside>
 
-      {/* Content */}
-      <main className="flex-1 p-6 bg-gray-100">
+      {/* Main Content */}
+      <main className="flex-1 p-6">
         <Outlet />
       </main>
     </div>

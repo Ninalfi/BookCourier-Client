@@ -9,7 +9,6 @@ import UserDashboard from "../dashboard/UserDashboard/UserDashboard";
 import MyOrders from "../dashboard/UserDashboard/MyOrders";
 import MyProfile from "../dashboard/UserDashboard/MyProfile";
 import Invoices from "../dashboard/UserDashboard/Invoices";
-import DashboardHome from "../dashboard/UserDashboard/DashboardHome";
 import Wishlist from "../dashboard/UserDashboard/Wishlist";
 import PrivateRoute from "../layouts/PrivateRoute";
 import AddBook from "../dashboard/LibrarianDashboard/AddBook";
@@ -18,6 +17,9 @@ import ManageBooks from "../dashboard/AdminDashboard/ManageBooks";
 import ManageUsers from "../dashboard/AdminDashboard/ManageUsers";
 import AllBooks from "../pages/AllBooks";
 import BookDetails from "../pages/BookDetails";
+import Orders from "../dashboard/LibrarianDashboard/Orders";
+import DashboardHome from "../dashboard/DashboardHome";
+
 
 export const router = createBrowserRouter([
   {
@@ -70,7 +72,7 @@ export const router = createBrowserRouter([
         Component: DashboardHome
       },
       {
-        path: 'orders',
+        path: 'my-orders',
         Component: MyOrders
       },
       {
@@ -86,15 +88,19 @@ export const router = createBrowserRouter([
         Component: Wishlist
       },
       {
-        path: 'addBook',
+        path: 'add-book',
         Component: AddBook
       },
       {
-        path: 'myBooks',
+        path: 'my-books',
         Component: MyBooks
       },
       {
-        path: 'manageBooks',
+        path: 'orders',
+        Component:Orders
+      },
+      {
+        path: 'manage-books',
         Component: ManageBooks
       },
       {
