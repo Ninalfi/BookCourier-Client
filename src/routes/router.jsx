@@ -12,6 +12,10 @@ import Invoices from "../dashboard/UserDashboard/Invoices";
 import DashboardHome from "../dashboard/UserDashboard/DashboardHome";
 import Wishlist from "../dashboard/UserDashboard/Wishlist";
 import PrivateRoute from "../layouts/PrivateRoute";
+import AddBook from "../dashboard/LibrarianDashboard/AddBook";
+import MyBooks from "../dashboard/LibrarianDashboard/MyBooks";
+import ManageBooks from "../dashboard/AdminDashboard/ManageBooks";
+import ManageUsers from "../dashboard/AdminDashboard/ManageUsers";
 
 export const router = createBrowserRouter([
   {
@@ -44,7 +48,7 @@ export const router = createBrowserRouter([
     ]
   },
   {
-    path: 'dashboard',
+    path: '/dashboard',
     element: (
       <PrivateRoute>
         <UserDashboard></UserDashboard>
@@ -70,6 +74,22 @@ export const router = createBrowserRouter([
       {
         path: 'wishlist',
         Component: Wishlist
+      },
+      {
+        path: 'addBook',
+        Component: AddBook
+      },
+      {
+        path: 'myBooks',
+        Component: MyBooks
+      },
+      {
+        path: 'manageBooks',
+        Component: ManageBooks
+      },
+      {
+        path: 'users',
+        Component: ManageUsers
       }
     ]
   }

@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase/firebase.init';
-import { GithubAuthProvider } from 'firebase/auth/web-extension';
 
 export const useAuth = () => useContext(AuthContext);
 
@@ -13,11 +12,21 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const registerUser = (email, password) => {
-        setLoading(true);
-        return createUserWithEmailAndPassword(auth, email, password)
-        .finally(() => setLoading(false));
-    }
+  const registerUser = async (email, password, name) => {
+  setLoading(true);
+
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+
+    await updateProfile(result.user, {
+      displayName: name,
+    });
+
+    return result;
+  } finally {
+    setLoading(false);
+  }
+};
 
     const signInUser = (email, password) => {
         setLoading(true);
@@ -45,12 +54,18 @@ const AuthProvider = ({ children }) => {
       .finally(() => setLoading(false));
     }
 
-      const updateUserProfile = (name, photoURL) => {
-    return updateProfile(auth.currentUser, {
-      displayName: name,
-      photoURL: photoURL,
-    });
-  };
+    const updateUserProfile = async (name, photoURL) => {
+  if (!auth.currentUser) {
+    throw new Error("User not authenticated");
+  }
+
+  const updateData = {};
+
+  if (name) updateData.displayName = name;
+  if (photoURL) updateData.photoURL = photoURL;
+
+  return updateProfile(auth.currentUser, updateData);
+};
 
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -63,7 +78,7 @@ const AuthProvider = ({ children }) => {
     }, [])
 
     const authInfo = {
-        user: auth.currentUser,
+        user,
         loading,
         registerUser,
         signInUser,

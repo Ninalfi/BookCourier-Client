@@ -6,16 +6,20 @@ const MyProfile = () => {
   const [name, setName] = useState(user?.displayName || "");
   const [photo, setPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
+  
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    let photoURL = user?.photoURL;
-
-    await updateUserProfile(name, photoURL);
+  try {
+    await updateUserProfile(name);
+    alert("Profile updated successfully");
+  } catch (error) {
+    console.error(error.message);
+  } finally {
     setLoading(false);
-  };
+  }
+};
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
