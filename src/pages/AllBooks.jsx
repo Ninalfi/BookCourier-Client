@@ -18,15 +18,24 @@ const AllBooks = () => {
         `http://localhost:3000/books?page=${pageNumber}&limit=${limit}&search=${currentSearch}&sort=${currentSort}`
       );
       const data = await res.json();
-      if (data.length < limit) setHasMore(false);
-      setBooks((prev) => (pageNumber === 1 ? data : [...prev, ...data]));
-    } catch (err) {
-      console.error("Error fetching books:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
+if (!Array.isArray(data)) {
+      console.error("Invalid books response:", data);
+      setHasMore(false);
+      return;
+    }
+
+    if (data.length < limit) setHasMore(false);
+
+    setBooks((prev) =>
+      pageNumber === 1 ? data : [...prev, ...data]
+    );
+  } catch (err) {
+    console.error("Error fetching books:", err);
+  } finally {
+    setLoading(false);
+  }
+};
   // Fetch books when page, search, or sort changes
   useEffect(() => {
     fetchBooks(page, search, sort);

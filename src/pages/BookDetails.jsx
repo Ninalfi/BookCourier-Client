@@ -95,7 +95,7 @@ const BookDetails = () => {
           <p className="text-[var(--bc-text)] text-xl mb-1"><strong>Author:</strong> {book.author}</p>
           <p className="text-[var(--bc-text)] text-xl mb-1"><strong>Category:</strong> {book.category}</p>
           <p className="text-[var(--bc-text)] text-xl mb-1"><strong>Language:</strong> {book.language}</p>
-          <p className="text-[var(--bc-accent)] text-2xl font-semibold mt-4">{book.price}</p>
+          <p className="text-[var(--bc-accent)] text-2xl font-semibold mt-4">{typeof book.price === "number" ? `$${book.price}` : book.price}</p>
           <p className="text-[var(--bc-text)] mt-4">{book.desc}</p>
           <div className="flex items-center gap-3 mt-4">
             <div className="flex items-center gap-3 mt-4">

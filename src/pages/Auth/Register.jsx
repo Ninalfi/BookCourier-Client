@@ -23,7 +23,7 @@ const Register = () => {
     }
 
     try {
-      const userCredential = await registerUser(data.email, data.password);
+      const user = await registerUser(data.email, data.password);
       
       await updateUserProfile({
         displayName: data.name,

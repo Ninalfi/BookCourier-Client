@@ -74,11 +74,6 @@ const Navbar = () => {
             {theme === "dark" ? <FaSun /> : <FaMoon />}
           </button>
 
-          <div className="relative p-3 border rounded-full border-(--color-primary)">
-            <FaHeart className="text-(--color-primary)" />
-            <span className="absolute top-0 right-0 bg-(--bc-accent) text-white rounded-full px-1 text-xs">0</span>
-          </div>
-
           <Link to="/cart" className="relative p-3 border rounded-full border-(--color-primary)">
             <FaShoppingCart className="text-(--color-primary)" />
              {totalItems > 0 && (

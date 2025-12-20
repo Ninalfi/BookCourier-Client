@@ -37,8 +37,8 @@ export const router = createBrowserRouter([
           Component: AllBooks
         },
         {
-          path: 'books/:id',
-          Component: BookDetails
+          path: '/books/:id}',
+          element:<BookDetails></BookDetails>
         },
         {
             path: 'coverage',
@@ -48,7 +48,8 @@ export const router = createBrowserRouter([
         {
           path:'cart',
           Component: CartPage
-        }
+        },
+        
     ]
   },
   {
@@ -114,5 +115,7 @@ export const router = createBrowserRouter([
         Component: ManageUsers
       }
     ]
-  }
+  },
+ 
+  
 ]);

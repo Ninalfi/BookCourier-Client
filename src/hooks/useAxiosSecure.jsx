@@ -13,6 +13,8 @@ axiosSecure.interceptors.request.use(async config => {
 });
 
 const useAxiosSecure = () => {
+  // const { user, logOut } = useAuth();
+  //   const navigate = useNavigate();
    return axiosSecure;
 };
 

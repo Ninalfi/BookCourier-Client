@@ -65,15 +65,14 @@ export default function DashboardLayout() {
         </nav>
       </aside>
 
-      {/* Mobile Sidebar Overlay */}
       <div className={`md:hidden fixed inset-0 z-40 transition-transform ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div
           className="bg-black bg-opacity-50 w-full h-full"
           onClick={() => setMobileOpen(false)}
         ></div>
-        <aside className="absolute left-0 top-0 w-64 h-full bg-[var(--bc-surface)] shadow-lg p-6 flex flex-col">
+        <aside className="absolute left-0 top-0 w-64 h-full bg-(--bc-surface) shadow-lg p-6 flex flex-col">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-[var(--color-primary)]">Dashboard</h2>
+            <h2 className="text-2xl font-bold text-(--color-primary)">Dashboard</h2>
             <button onClick={() => setMobileOpen(false)} className="p-2 rounded hover:bg-gray-200">✕</button>
           </div>
           <p className="mb-4 text-gray-500 capitalize">Role: {role}</p>

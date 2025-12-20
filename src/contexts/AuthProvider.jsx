@@ -12,7 +12,7 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-  const registerUser = async (email, password, name) => {
+ const registerUser = async (email, password, name) => {
   setLoading(true);
 
   try {
@@ -27,6 +27,8 @@ const AuthProvider = ({ children }) => {
     setLoading(false);
   }
 };
+
+
 
     const signInUser = (email, password) => {
         setLoading(true);
