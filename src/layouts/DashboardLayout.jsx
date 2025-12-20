@@ -3,9 +3,10 @@ import { useState } from "react";
 import { FaBars, FaTachometerAlt, FaBook, FaUser, FaFileInvoiceDollar, FaUsers, FaClipboardList } from "react-icons/fa";
 import useRole from "../hooks/useRole";
 import Navbar from "../components/Shared/Navbar";
+import { MdPayment } from "react-icons/md";
 
 export default function DashboardLayout() {
-  const role = useRole();
+  const {role, roleLoading } = useRole();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -15,6 +16,7 @@ export default function DashboardLayout() {
       { name: "Dashboard", path: "/dashboard", icon: <FaTachometerAlt /> },
       { name: "My Orders", path: "/dashboard/my-orders", icon: <FaBook /> },
       { name: "My Profile", path: "/dashboard/profile", icon: <FaUser /> },
+      { name: "Payments", path: "/dashboard/payments", icon: <MdPayment/> },
       { name: "Invoices", path: "/dashboard/invoices", icon: <FaFileInvoiceDollar /> },
     ],
     librarian: [
@@ -36,7 +38,7 @@ export default function DashboardLayout() {
 
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden md:flex flex-col bg-[var(--bc-surface)] p-6 shadow-lg transition-all duration-300 ${
+        className={`hidden md:flex flex-col bg-(--bc-surface) p-6 shadow-lg transition-all duration-300 ${
           collapsed ? "w-20" : "w-64"
         }`}
       >
@@ -83,8 +85,8 @@ export default function DashboardLayout() {
                 to={link.path}
                 onClick={() => setMobileOpen(false)}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 p-2 rounded hover:bg-[var(--color-primary)] hover:text-white ${
-                    isActive ? "bg-[var(--color-primary)] text-white" : "text-gray-700"
+                  `flex items-center gap-2 p-2 rounded hover:bg-(--color-primary) hover:text-white ${
+                    isActive ? "bg-(--color-primary) text-white" : "text-gray-700"
                   }`
                 }
               >

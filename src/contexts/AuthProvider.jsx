@@ -38,7 +38,8 @@ const AuthProvider = ({ children }) => {
 
     const signInGoogle = () => {
         setLoading(true);
-        return signInWithPopup(auth, googleProvider);
+        return signInWithPopup(auth, googleProvider)
+         .finally(() => setLoading(false));
     }
 
 //      const signInGithub = () => {

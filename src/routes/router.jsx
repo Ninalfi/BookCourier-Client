@@ -9,6 +9,7 @@ import UserDashboard from "../dashboard/UserDashboard/UserDashboard";
 import MyOrders from "../dashboard/UserDashboard/MyOrders";
 import MyProfile from "../dashboard/UserDashboard/MyProfile";
 import Invoices from "../dashboard/UserDashboard/Invoices";
+import Payment from "../dashboard/UserDashboard/Payment";
 import Wishlist from "../dashboard/UserDashboard/Wishlist";
 import PrivateRoute from "../layouts/PrivateRoute";
 import AddBook from "../dashboard/LibrarianDashboard/AddBook";
@@ -21,6 +22,8 @@ import Orders from "../dashboard/LibrarianDashboard/Orders";
 import DashboardHome from "../dashboard/DashboardHome";
 import CartPage from "../pages/CartPage";
 import DashboardLayout from "../layouts/DashboardLayout";
+import LibrarianRoute from "../layouts/LibrarianRoute";
+import AdminRoute from "../layouts/AdminRoute";
 
 
 export const router = createBrowserRouter([
@@ -37,7 +40,7 @@ export const router = createBrowserRouter([
           Component: AllBooks
         },
         {
-          path: '/books/:id}',
+          path: 'books/:id}',
           element:<BookDetails></BookDetails>
         },
         {
@@ -91,28 +94,52 @@ export const router = createBrowserRouter([
         Component: Invoices
       },
       {
+        path: 'payments',
+        Component: Payment
+      },
+      {
         path: 'wishlist',
         Component: Wishlist
       },
       {
-        path: 'add-book',
-        Component: AddBook
+        path: "add-book",
+        element: (
+           <LibrarianRoute>
+            <AddBook />
+           </LibrarianRoute>
+          ),
       },
       {
-        path: 'my-books',
-        Component: MyBooks
+        path: "my-books",
+  element: (
+    <LibrarianRoute>
+      <MyBooks />
+    </LibrarianRoute>
+  ),
       },
       {
-        path: 'orders',
-        Component:Orders
+        path: "librarian-orders",
+  element: (
+    <LibrarianRoute>
+      <Orders />
+    </LibrarianRoute>
+  ),
       },
       {
         path: 'manage-books',
-        Component: ManageBooks
+        element: (
+          <AdminRoute>
+            <ManageBooks />
+          </AdminRoute>
+        )
       },
       {
-        path: 'users',
-        Component: ManageUsers
+        path: 'all-users',
+        element:(
+          <AdminRoute>
+            <ManageUsers />
+          </AdminRoute>
+        ) 
       }
     ]
   },
