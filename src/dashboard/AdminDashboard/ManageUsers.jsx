@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const AllUsers = () => {
+const ManageUsers = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log("TOKEN 👉", token);
-
     axios
       .get("http://localhost:3000/users", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        console.log("ADMIN USERS RESPONSE 👉", res.data);
         setUsers(res.data.users || []);
       })
-      .catch((err) => console.error("ADMIN USERS ERROR 👉", err));
+      .catch((err) => console.error("Error fetching users:", err));
   }, []);
 
   const changeRole = (id, role) => {
@@ -27,17 +24,21 @@ const AllUsers = () => {
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       )
       .then(() => {
-        setUsers((prev) => prev.map((u) => (u._id === id ? { ...u, role } : u)));
+        setUsers((prev) =>
+          prev.map((u) => (u._id === id ? { ...u, role } : u))
+        );
       });
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-3xl font-bold mb-6 text-yellow-500">All the users who logged-in/registered in this website</h2>
+    <div className="max-w-7xl mx-auto px-6 py-10">
+      <h2 className="text-3xl font-bold mb-8 text-[var(--color-primary)]">
+        All Registered Users
+      </h2>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-secondary border rounded-lg shadow-md">
-          <thead className="bg-purple-800 text-white">
+        <table className="min-w-full bg-[var(--bc-surface)] rounded-lg shadow-lg">
+          <thead className="bg-[var(--color-primary)] text-white">
             <tr>
               <th className="py-3 px-6 text-left">Name</th>
               <th className="py-3 px-6 text-left">Email</th>
@@ -47,15 +48,18 @@ const AllUsers = () => {
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u._id} className="border-b hover:bg-primary">
-                <td className="py-3 px-6">{u.name}</td>
-                <td className="py-3 px-6">{u.email}</td>
-                <td className="py-3 px-6 capitalize">{u.role}</td>
+              <tr
+                key={u._id}
+                className="border-b hover:bg-[var(--bc-bg)] transition-colors"
+              >
+                <td className="py-3 px-6 text-[var(--bc-text)]">{u.name}</td>
+                <td className="py-3 px-6 text-[var(--bc-text)]">{u.email}</td>
+                <td className="py-3 px-6 capitalize text-[var(--bc-accent)]">{u.role}</td>
                 <td className="py-3 px-6 flex gap-2">
                   {u.role !== "librarian" && (
                     <button
                       onClick={() => changeRole(u._id, "librarian")}
-                      className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition-colors text-sm"
+                      className="bg-[var(--color-secondary)] text-[var(--color-primary)] px-3 py-1 rounded hover:bg-[var(--bc-accent)] transition-colors text-sm"
                     >
                       Make Librarian
                     </button>
@@ -63,7 +67,7 @@ const AllUsers = () => {
                   {u.role !== "admin" && (
                     <button
                       onClick={() => changeRole(u._id, "admin")}
-                      className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition-colors text-sm"
+                      className="bg-[var(--color-secondary)] text-[var(--color-primary)] px-3 py-1 rounded hover:bg-[var(--bc-accent)] transition-colors text-sm"
                     >
                       Make Admin
                     </button>
@@ -73,7 +77,10 @@ const AllUsers = () => {
             ))}
             {users.length === 0 && (
               <tr>
-                <td colSpan="4" className="text-center py-4 text-gray-500">
+                <td
+                  colSpan="4"
+                  className="text-center py-4 text-gray-500 italic"
+                >
                   No users found.
                 </td>
               </tr>
@@ -85,4 +92,4 @@ const AllUsers = () => {
   );
 };
 
-export default AllUsers;
+export default ManageUsers;
