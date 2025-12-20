@@ -58,9 +58,7 @@ function Table({ title, columns, rows, emptyText = "No data found" }) {
                 <td
                   className="px-5 py-6 text-[color:var(--bc-text)]/70"
                   colSpan={columns.length}
-                >
-                  {emptyText}
-                </td>
+                >{emptyText}</td>
               </tr>
             )}
           </tbody>
@@ -78,67 +76,49 @@ function StatusBadge({ status }) {
   if (status === "pending")
     return (
       <span
-        className={`${common} bg-[var(--color-secondary)] text-[var(--color-primary)] border-[var(--color-secondary)]`}
-      >
-        Pending
-      </span>
+        className={`${common} bg-(--color-secondary) text-(--color-primary) border-(--color-secondary)`}
+      > Pending</span>
     );
 
   if (status === "shipped")
     return (
       <span
         className={`${common} bg-[var(--bc-bg)] text-[var(--bc-accent)] border-[var(--color-secondary)]`}
-      >
-        Shipped
-      </span>
+      >Shipped </span>
     );
 
   if (status === "delivered")
     return (
       <span
         className={`${common} bg-[color:var(--bc-accent)]/10 text-[var(--bc-accent)] border-[color:var(--bc-accent)]/20`}
-      >
-        Delivered
-      </span>
+      >Delivered </span>
     );
 
   if (status === "cancelled")
     return (
       <span
         className={`${common} bg-[color:var(--bc-text)]/5 text-[color:var(--bc-text)]/80 border-[var(--color-secondary)]`}
-      >
-        Cancelled
-      </span>
+      >Cancelled</span>
     );
 
   return (
     <span
       className={`${common} bg-[color:var(--bc-text)]/5 text-[color:var(--bc-text)]/80 border-[var(--color-secondary)]`}
-    >
-      {status || "—"}
-    </span>
+    >{status || "—"}</span>
   );
 }
 
 function PaymentBadge({ status }) {
   const common =
     "inline-flex px-2 py-1 rounded-full text-xs font-semibold border";
-
   if (status === "paid")
     return (
-      <span
-        className={`${common} bg-[color:var(--bc-accent)]/10 text-[var(--bc-accent)] border-[color:var(--bc-accent)]/20`}
-      >
-        Paid
-      </span>
+      <span className={`${common} bg-[color:var(--bc-accent)]/10 text-[var(--bc-accent)] border-[color:var(--bc-accent)]/20`}
+      > Paid</span>
     );
-
   return (
-    <span
-      className={`${common} bg-[var(--bc-bg)] text-[var(--color-primary)] border-[var(--color-secondary)]`}
-    >
-      Unpaid
-    </span>
+    <span className={`${common} bg-[var(--bc-bg)] text-[var(--color-primary)] border-[var(--color-secondary)]`}
+    > Unpaid </span>
   );
 }
 

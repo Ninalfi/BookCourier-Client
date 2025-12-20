@@ -1,46 +1,56 @@
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
-import { getAuth } from "firebase/auth";
-
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Payment = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // orderId
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
 
   const handlePay = async () => {
     try {
-      const auth = getAuth();
-      const token = await auth.currentUser.getIdToken(true);
+      // In real Stripe integration, paymentId comes from Stripe
+      // For now, generate a demo paymentId
+      const paymentId = `demo_${Date.now()}`;
 
-      await axios.put(
-        `http://localhost:3000/users/payment/${id}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      // ✅ backend endpoint that marks order as paid + saves payment record
+      await axiosSecure.post("/payments", {
+        orderId: id,
+        paymentId,
+        amount: 0, // optional, server can use order bookPrice. You can pass amount if you want.
+      });
 
       toast.success("Payment successful!");
-      navigate("/dashboard/orders"); // Navigate back to My Orders
+      navigate("/dashboard/my-orders");
     } catch (err) {
-      toast.error("Payment failed. Please try again.");
       console.error(err);
+      toast.error(err?.response?.data?.message || "Payment failed. Please try again.");
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-[70vh]">
-      <div className="bg-[var(--bc-surface)] p-8 rounded-xl shadow-lg w-full max-w-md text-center">
-        <h2 className="text-2xl font-bold mb-6 text-[var(--color-primary)]">
-          Payment for Order
+    <div className="flex justify-center items-center min-h-[70vh] px-4">
+      <div className="bg-[var(--bc-surface)] border border-[var(--color-secondary)] p-8 rounded-2xl shadow-sm w-full max-w-md text-center">
+        <h2 className="text-2xl font-bold mb-3 text-[var(--color-primary)]">
+          Payment Confirmation
         </h2>
-        <p className="mb-6 text-[var(--bc-text)]">
-          Please confirm your payment for this order. Once paid, your order status will be updated.
+
+        <p className="mb-6 text-[color:var(--bc-text)]/85">
+          Confirm payment for this order. After payment, the order payment status will be updated to{" "}
+          <span className="font-semibold text-[var(--bc-accent)]">Paid</span>.
         </p>
-        <button
-          onClick={handlePay}
-          className="w-full bg-[var(--bc-accent)] hover:bg-[var(--color-primary)] text-white px-6 py-3 rounded-lg font-semibold transition"
-        >
-          Confirm Payment
+
+        <div className="mb-6 rounded-xl bg-[var(--bc-bg)] border border-[var(--color-secondary)] p-4 text-left">
+          <p className="text-xs text-[color:var(--bc-text)]/70">Order ID</p>
+          <p className="text-sm font-semibold text-[var(--bc-text)] break-all">{id}</p>
+        </div>
+
+        <button onClick={handlePay} className="w-full bg-[var(--bc-accent)] hover:opacity-90 text-white px-6 py-3 rounded-xl font-semibold transition"
+        >Confirm Payment</button>
+
+        <button onClick={() => navigate("/dashboard/my-orders")}
+          className="w-full mt-3 bg-[var(--bc-bg)] hover:bg-[var(--color-secondary)] text-[var(--color-primary)] px-6 py-3 rounded-xl font-semibold border border-[var(--color-secondary)] transition"
+        > Back to My Orders
         </button>
       </div>
     </div>
