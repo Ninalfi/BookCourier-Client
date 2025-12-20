@@ -61,21 +61,36 @@ const BookDetails = () => {
     setQuantity(prev => Math.max(1, prev + amount));
   };
 
-  const placeOrder = async () => {
-    try {
-      await fetch("http://localhost:3000/my-orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...orderData, bookId: book._id, userId: "123456", quantity, bookTitle: book.title, price: book.price, name: orderData.name, orderStatus:"pending",paymentStatus: "unpaid" }),
-      });
-      setShowModal(false);
-      alert("Order placed successfully!");
-      clearCart();
-      navigate("/dashboard/my-orders");
-    } catch (err) {
-      console.error(err);
-    }
-  };
+const placeOrder = async () => {
+  try {
+    const token = await user.getIdToken();
+
+    await fetch("http://localhost:3000/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        bookId: book._id,
+        bookTitle: book.title,
+        price: book.price,
+        quantity,
+        email: user.email,
+        orderStatus: "pending",
+        paymentStatus: "unpaid",
+      }),
+    });
+
+    setShowModal(false);
+    alert("Order placed successfully!");
+    navigate("/dashboard/my-orders");
+  } catch (err) {
+    console.error("Order error:", err);
+    alert("Failed to place order");
+  }
+};
+
 
   if (loading) return <p className="text-center py-10">Loading...</p>;
   if (!book) return <p className="text-center py-10">Book not found</p>;
@@ -86,7 +101,7 @@ const BookDetails = () => {
     <div className="max-w-4xl mx-auto py-10 px-4 bg-(--bc-bg) rounded-lg shadow-md">
       <div className="flex flex-col md:flex-row gap-6">
         <img
-          src={book.img || "https://via.placeholder.com/200"}
+          src={book.image || "https://via.placeholder.com/200"}
           alt={book.title}
           className="w-full md:w-1/3 h-auto object-cover rounded-lg shadow-sm"
         />

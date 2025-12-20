@@ -40,9 +40,14 @@ export const router = createBrowserRouter([
           Component: AllBooks
         },
         {
-          path: 'books/:id}',
-          element:<BookDetails></BookDetails>
-        },
+    path: "books/:id",
+    element: (
+    <PrivateRoute>
+      <BookDetails />
+    </PrivateRoute>
+    ),
+    },
+
         {
             path: 'coverage',
             Component: Coverage,
@@ -92,6 +97,10 @@ export const router = createBrowserRouter([
       {
         path: 'invoices',
         Component: Invoices
+      },
+      {
+        path: 'payments',
+        Component: Payment
       },
       {
         path: 'payments/:id',

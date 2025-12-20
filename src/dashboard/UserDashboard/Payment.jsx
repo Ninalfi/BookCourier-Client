@@ -3,21 +3,18 @@ import toast from "react-hot-toast";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Payment = () => {
-  const { id } = useParams(); // orderId
+  const { id } = useParams(); 
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
 
   const handlePay = async () => {
     try {
-      // In real Stripe integration, paymentId comes from Stripe
-      // For now, generate a demo paymentId
       const paymentId = `demo_${Date.now()}`;
 
-      // ✅ backend endpoint that marks order as paid + saves payment record
       await axiosSecure.post("/payments", {
         orderId: id,
         paymentId,
-        amount: 0, // optional, server can use order bookPrice. You can pass amount if you want.
+        amount: 0,
       });
 
       toast.success("Payment successful!");

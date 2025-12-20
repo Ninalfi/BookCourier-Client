@@ -83,7 +83,7 @@ if (!Array.isArray(data)) {
           <Link key={book._id} to={`/books/${book._id}`}>
             <div className="bg-[var(--bc-surface)] rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition">
               <img
-                src={book.img || "https://via.placeholder.com/150"}
+                src={book.image || "https://via.placeholder.com/150"}
                 alt={book.title}
                 className="w-full h-60 object-cover"
               />
