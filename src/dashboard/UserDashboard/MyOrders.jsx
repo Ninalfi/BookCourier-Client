@@ -35,20 +35,21 @@ export default function MyOrders() {
   }, [user]);
 
   const cancelOrder = async (id) => {
-    try {
-      await axiosSecure.patch(`/orders/${id}/cancel`);
-      setOrders((prev) =>
-        (Array.isArray(prev) ? prev : []).map((o) =>
-          o._id === id ? { ...o, orderStatus: "cancelled" } : o
-        )
-      );
-    } catch (err) {
-      console.error("Cancel order error:", err);
-    }
-  };
+  try {
+    await axiosSecure.patch(`/orders/${id}`, { orderStatus: "cancelled" });
+
+    setOrders((prev) =>
+      (Array.isArray(prev) ? prev : []).map((o) =>
+        o._id === id ? { ...o, orderStatus: "cancelled" } : o
+      )
+    );
+  } catch (err) {
+    console.error("Cancel order error:", err);
+  }
+};
 
   const payNow = (id) => {
-    navigate(`/dashboard/payment/${id}`);
+    navigate(`/dashboard/payments/${id}`);
   };
 
   return (

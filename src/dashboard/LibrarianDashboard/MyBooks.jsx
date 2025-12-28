@@ -41,7 +41,7 @@ const MyBooks = () => {
             <tr key={book._id} className="text-center border-t">
               <td>{book.title}</td>
               <td>
-                <img src={book.image} alt={book.title} className="h-20 mx-auto" />
+                <img src={book.img} alt={book.title} className="h-20 mx-auto" />
               </td>
               <td>{book.status}</td>
               <td>

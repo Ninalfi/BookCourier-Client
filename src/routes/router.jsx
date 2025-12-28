@@ -99,9 +99,9 @@ export const router = createBrowserRouter([
         Component: Invoices
       },
       {
-        path: 'payments',
-        Component: Payment
-      },
+  path: "payments",
+  Component: Payment
+   },
       {
         path: 'payments/:id',
         Component: Payment
@@ -127,7 +127,7 @@ export const router = createBrowserRouter([
   ),
       },
       {
-        path: "librarian-orders",
+        path: "orders",
   element: (
     <LibrarianRoute>
       <Orders />

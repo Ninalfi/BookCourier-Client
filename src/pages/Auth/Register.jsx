@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
-import SocialLogin from "./SocialLogin";
 import { useForm } from "react-hook-form";
 import { FaEye, FaRegEyeSlash } from "react-icons/fa";
 
@@ -23,16 +22,13 @@ const Register = () => {
     }
 
     try {
-      const user = await registerUser(data.email, data.password);
-      
-      await updateUserProfile({
-        displayName: data.name,
-        photoURL: data.photo
-      });
+await registerUser(data.email, data.password, data.name);
+await updateUserProfile(data.name, data.photo);
 
       navigate("/");
     } catch (err) {
-      setError("Registration failed. Try again.");
+      console.error(err);
+      setError(err?.message ||  "Registration failed. Try again.");
     }
   };
 
@@ -40,27 +36,19 @@ const Register = () => {
     <div className="w-full min-h-screen flex items-center justify-center bg-(--bc-bg) px-4 py-10">
 
       <div className="bg-(--bc-surface) shadow-xl rounded-xl p-8 w-full max-w-md border border-(--color-secondary)">
-
-        {/* Title */}
         <h2 className="text-3xl font-bold text-center text-(--color-primary) mb-2">
           Create an Account
         </h2>
-
         <p className="text-center text-(--bc-text)/70 mb-6">
           Join BookCourier and start exploring
         </p>
-
-        {/* Error */}
         {error && (
           <p className="text-(--bc-accent) text-sm text-center mb-4 font-medium">
             {error}
           </p>
         )}
-
-        {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-          {/* Name */}
           <div>
             <label className="label">
               <span className="label-text text-(--bc-text)">Full Name</span>

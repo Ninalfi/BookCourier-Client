@@ -78,7 +78,7 @@ const Wishlist = () => {
               className="bg-[var(--bc-surface)] rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition"
             >
               <img
-                src={book.image}
+                src={book.img}
                 alt={book.title}
                 className="h-56 w-full object-cover"
               />

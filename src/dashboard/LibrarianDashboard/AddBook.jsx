@@ -15,7 +15,7 @@ const AddBook = () => {
       const book = {
       title: e.target.title.value,
       author: e.target.author.value,
-      image: e.target.image.value,
+      image: e.target.img.value,
       price: Number(e.target.price.value),
       status: e.target.status.value,
       librarianEmail: user.email

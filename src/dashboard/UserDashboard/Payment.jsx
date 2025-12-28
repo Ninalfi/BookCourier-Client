@@ -11,14 +11,13 @@ const Payment = () => {
     try {
       const paymentId = `demo_${Date.now()}`;
 
-      await axiosSecure.post("/payments", {
-        orderId: id,
-        paymentId,
-        amount: 0,
-      });
+const res = await axiosSecure.post("/payments", {
+  orderId: id,
+  paymentId,
+});
 
-      toast.success("Payment successful!");
-      navigate("/dashboard/my-orders");
+toast.success(`Payment successful! Amount: $${Number(res.data.amount).toFixed(2)}`);
+      navigate("/dashboard/invoices");
     } catch (err) {
       console.error(err);
       toast.error(err?.response?.data?.message || "Payment failed. Please try again.");

@@ -3,23 +3,56 @@ import { useAuth } from "../../contexts/AuthProvider";
 
 const MyProfile = () => {
   const { user, updateUserProfile } = useAuth();
-  const [name, setName] = useState(user?.displayName || "");
-  const [photo, setPhoto] = useState(null);
-  const [loading, setLoading] = useState(false);
-  
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
 
-  try {
-    await updateUserProfile(name);
-    alert("Profile updated successfully");
-  } catch (error) {
-    console.error(error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  const [name, setName] = useState(user?.displayName || "");
+  const [photo, setPhoto] = useState(null); // File
+  const [loading, setLoading] = useState(false);
+
+  const uploadToImgbb = async (file) => {
+    const key = import.meta.env.VITE_IMGBB_KEY;
+    if (!key) throw new Error("Missing VITE_IMGBB_KEY in .env");
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${key}`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data?.success) {
+      throw new Error(data?.error?.message || "Image upload failed");
+    }
+
+    return data.data.url; // ✅ hosted image url
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      let photoURL = user?.photoURL || "";
+
+      // If user selected a new file, upload it
+      if (photo) {
+        photoURL = await uploadToImgbb(photo);
+      }
+
+      await updateUserProfile(name, photoURL);
+
+      alert("Profile updated successfully!");
+      // optional: force refresh UI (depends on how your app updates user state)
+      // window.location.reload();
+    } catch (error) {
+      console.error(error);
+      alert(error?.message || "Failed to update profile");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -39,6 +72,7 @@ const handleSubmit = async (e) => {
             <p className="text-sm opacity-70">{user?.email}</p>
           </div>
         </div>
+
         <div className="card bg-base-200 p-6 md:col-span-2">
           <h3 className="text-xl font-semibold mb-4">Update Profile</h3>
 
@@ -60,8 +94,11 @@ const handleSubmit = async (e) => {
                 type="file"
                 className="file-input file-input-bordered w-full"
                 accept="image/*"
-                onChange={(e) => setPhoto(e.target.files[0])}
+                onChange={(e) => setPhoto(e.target.files?.[0] || null)}
               />
+              <p className="text-xs opacity-70 mt-1">
+                (Optional) Upload a new photo. If you don’t choose one, only your name updates.
+              </p>
             </div>
 
             <button
