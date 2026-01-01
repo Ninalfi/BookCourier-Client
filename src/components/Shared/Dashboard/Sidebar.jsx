@@ -4,7 +4,7 @@ import { useAuth } from "../../../contexts/AuthProvider";
 
 const Sidebar = () => {
   const { user } = useAuth();
-  const role = user?.role; // fetched from DB
+  const role = user?.role;
 
   return (
     <div className="w-64 bg-base-200 p-5 hidden md:block">

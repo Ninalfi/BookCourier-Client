@@ -4,7 +4,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useAuth } from "../../contexts/AuthProvider";
 import useRole from "../../hooks/useRole";
 
-export default function ManageUsers() {
+const ManageUsers = () => {
   const axiosSecure = useAxiosSecure();
   const { user, loading } = useAuth();
   const { role, roleLoading } = useRole();
@@ -15,7 +15,7 @@ export default function ManageUsers() {
   const fetchUsers = async () => {
     try {
       setPageLoading(true);
-      const res = await axiosSecure.get("/users"); // ✅ backend returns array
+      const res = await axiosSecure.get("/users");
       setUsers(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Error fetching users:", err.response?.data || err.message);
@@ -40,7 +40,7 @@ export default function ManageUsers() {
 
   const changeRole = async (id, newRole) => {
     try {
-      await axiosSecure.patch(`/users/role/${id}`, { role: newRole }); // ✅ correct route
+      await axiosSecure.patch(`/users/role/${id}`, { role: newRole });
       toast.success(`Role updated to ${newRole}`);
 
       setUsers((prev) =>
@@ -141,3 +141,4 @@ export default function ManageUsers() {
     </div>
   );
 }
+export default ManageUsers;

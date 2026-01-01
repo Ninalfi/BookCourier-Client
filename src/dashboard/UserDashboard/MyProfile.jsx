@@ -5,7 +5,7 @@ const MyProfile = () => {
   const { user, updateUserProfile } = useAuth();
 
   const [name, setName] = useState(user?.displayName || "");
-  const [photo, setPhoto] = useState(null); // File
+  const [photo, setPhoto] = useState(null); 
   const [loading, setLoading] = useState(false);
 
   const uploadToImgbb = async (file) => {
@@ -26,7 +26,7 @@ const MyProfile = () => {
       throw new Error(data?.error?.message || "Image upload failed");
     }
 
-    return data.data.url; // ✅ hosted image url
+    return data.data.url; 
   };
 
   const handleSubmit = async (e) => {
@@ -35,8 +35,6 @@ const MyProfile = () => {
 
     try {
       let photoURL = user?.photoURL || "";
-
-      // If user selected a new file, upload it
       if (photo) {
         photoURL = await uploadToImgbb(photo);
       }
@@ -44,8 +42,6 @@ const MyProfile = () => {
       await updateUserProfile(name, photoURL);
 
       alert("Profile updated successfully!");
-      // optional: force refresh UI (depends on how your app updates user state)
-      // window.location.reload();
     } catch (error) {
       console.error(error);
       alert(error?.message || "Failed to update profile");

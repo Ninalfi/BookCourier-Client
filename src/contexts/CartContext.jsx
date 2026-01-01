@@ -24,7 +24,7 @@ const CartProvider = ({ children }) => {
             : item
         );
       } else {
-        return [...prev, book]; // add new book
+        return [...prev, book];
       }
     });
   };

@@ -7,7 +7,6 @@ const Wishlist = () => {
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch wishlist
   useEffect(() => {
     if (!user?.email) return;
 
@@ -19,7 +18,6 @@ const Wishlist = () => {
       });
   }, [user?.email]);
 
-  // Remove item
   const handleRemove = (id) => {
     fetch(`http://localhost:3000/wishlist/${id}`, {
       method: "DELETE",

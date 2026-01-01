@@ -5,9 +5,11 @@ import SocialLogin from "./SocialLogin";
 import { useForm } from "react-hook-form";
 import { FaEye, FaRegEyeSlash } from "react-icons/fa";
 
+const API = "http://localhost:3000";
+
 const Login = () => {
   const { register, formState: { errors } } = useForm();
-  const { logIn } = useAuth();
+  const { signInUser } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -16,16 +18,34 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+    const syncUserToDB = async (firebaseUser) => {
+    const token = await firebaseUser.getIdToken(true);
+
+    await fetch(`${API}/users`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name: firebaseUser.displayName || "",
+      }),
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      await logIn(email, password);
+      const firebaseUser = await signInUser(email, password);
+      await syncUserToDB(firebaseUser);
       navigate("/dashboard");
     } catch (err) {
+      console.error("Login error:", err);
       setError("Invalid email or password");
+    } finally {
       setLoading(false);
     }
   };
@@ -35,15 +55,10 @@ const Login = () => {
     <div className="w-full min-h-screen flex items-center justify-center bg-(--bc-bg) px-4 py-10">
 
       <div className="bg-(--bc-surface) shadow-xl rounded-xl p-8 w-full max-w-md border border-(--color-secondary)">
-
-        {/* Heading */}
         <h2 className="text-3xl font-bold text-center text-(--color-primary) mb-2">
-          Welcome Back
-        </h2>
-
-        <p className="text-center text-(--bc-text)/70 mb-6">
-          Login to continue your journey
-        </p>
+          Welcome Back </h2>
+  <p className="text-center text-(--bc-text)/70 mb-6">
+          Login to continue your journey</p>
 
         {/* Error */}
         {error && (
@@ -51,11 +66,7 @@ const Login = () => {
             {error}
           </p>
         )}
-
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-
-          {/* Email */}
           <div>
             <label className="label">
               <span className="label-text text-(--bc-text)">Email</span>
@@ -72,7 +83,6 @@ const Login = () => {
             )}
           </div>
 
-          {/* Password */}
           <div className="relative">
             <label className="label">
               <span className="label-text text-(--bc-text)">Password</span>

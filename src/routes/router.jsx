@@ -19,11 +19,13 @@ import ManageUsers from "../dashboard/AdminDashboard/ManageUsers";
 import AllBooks from "../pages/AllBooks";
 import BookDetails from "../pages/BookDetails";
 import Orders from "../dashboard/LibrarianDashboard/Orders";
-import DashboardHome from "../dashboard/DashboardHome";
+//import DashboardHome from "../dashboard/DashboardHome";
 import CartPage from "../pages/CartPage";
 import DashboardLayout from "../layouts/DashboardLayout";
 import LibrarianRoute from "../layouts/LibrarianRoute";
 import AdminRoute from "../layouts/AdminRoute";
+import UserDashboardHome from "../dashboard/UserDashboardHome";
+import EditBook from "../dashboard/LibrarianDashboard/EditBook";
 
 
 export const router = createBrowserRouter([
@@ -84,7 +86,7 @@ export const router = createBrowserRouter([
     children:[
       {
         index: true,
-        Component: DashboardHome
+        Component: UserDashboardHome
       },
       {
         path: 'my-orders',
@@ -120,14 +122,18 @@ export const router = createBrowserRouter([
       },
       {
         path: "my-books",
-  element: (
+        element: (
     <LibrarianRoute>
       <MyBooks />
     </LibrarianRoute>
   ),
       },
       {
-        path: "orders",
+        path: "edit-book/:id",
+        Component: EditBook
+      },
+      {
+        path: "librarian-orders",
   element: (
     <LibrarianRoute>
       <Orders />

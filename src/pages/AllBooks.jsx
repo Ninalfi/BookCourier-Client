@@ -7,7 +7,7 @@ const AllBooks = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState(""); // "asc" or "desc"
+  const [sort, setSort] = useState("");
 
   const limit = 20;
 
@@ -36,7 +36,6 @@ if (!Array.isArray(data)) {
     setLoading(false);
   }
 };
-  // Fetch books when page, search, or sort changes
   useEffect(() => {
     fetchBooks(page, search, sort);
   }, [page, search, sort]);

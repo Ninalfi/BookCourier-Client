@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useAuth } from "../../contexts/AuthProvider";
 
 const Invoices = () => {
+  const { user, loading: authLoading } = useAuth();
   const axiosSecure = useAxiosSecure();
+
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -11,25 +14,36 @@ const Invoices = () => {
     [payments]
   );
 
+  const load = async () => {
+    if (!user?.email) return;
+
+    try {
+      setLoading(true);
+      const res = await axiosSecure.get("/payments/my");
+      const list = res.data?.payments || [];
+      setPayments(Array.isArray(list) ? list : []);
+    } catch (err) {
+      console.error(
+        "Invoices fetch error:",
+        err?.response?.status,
+        err?.response?.data
+      );
+      setPayments([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const load = async () => {
-      try {
-        setLoading(true);
-        const res = await axiosSecure.get("/payments/my");
-        const data = res.data;
-        const list = Array.isArray(data) ? data : data?.payments || [];
-
-        setPayments(list);
-      } catch (err) {
-        console.error("Invoices fetch error:", err);
-        setPayments([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
+    if (authLoading) return;
+    if (!user?.email) {     
+      setPayments([]);
+      setLoading(false);
+      return;
+    }
     load();
-  }, [axiosSecure]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, user?.email]);
 
   return (
     <div className="bg-[var(--bc-surface)] border border-[var(--color-secondary)] p-5 rounded-2xl shadow-sm">
@@ -40,12 +54,9 @@ const Invoices = () => {
             Your completed payments and invoice history.
           </p>
         </div>
-        <button
-          onClick={() => window.location.reload()}
-          className="px-4 py-2 rounded-xl border border-[var(--color-secondary)] bg-[var(--bc-bg)] text-[var(--color-primary)] font-semibold hover:bg-[var(--color-secondary)] transition"
-        >Refresh</button>
+        <button onClick={load}  className="px-4 py-2 rounded-xl border border-[var(--color-secondary)] bg-[var(--bc-bg)] text-[var(--color-primary)] font-semibold hover:bg-[var(--color-secondary)] transition"
+        >Refresh </button>
       </div>
-
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm">
           <thead className="bg-[var(--color-secondary)] text-[var(--bc-text)]">
@@ -57,7 +68,6 @@ const Invoices = () => {
               <th className="px-4 py-3 text-left font-semibold">Order ID</th>
             </tr>
           </thead>
-
           <tbody>
             {loading ? (
               <tr>
@@ -92,9 +102,7 @@ const Invoices = () => {
                   </td>
 
                   <td className="px-4 py-3 text-[color:var(--bc-text)]/85">
-                    {payment.date
-                      ? new Date(payment.date).toLocaleDateString()
-                      : "—"}
+                    {payment.date ? new Date(payment.date).toLocaleDateString() : "—"}
                   </td>
 
                   <td className="px-4 py-3 text-[color:var(--bc-text)]/75">

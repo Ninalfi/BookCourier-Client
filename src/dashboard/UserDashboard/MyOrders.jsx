@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
-export default function MyOrders() {
-  const { user } = useAuth();
+const MyOrders = () => {
+  const { user, loading: authLoading  } = useAuth();
   const axiosSecure = useAxiosSecure();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ export default function MyOrders() {
   const safeOrders = useMemo(() => (Array.isArray(orders) ? orders : []), [orders]);
 
   const fetchOrders = async () => {
-    if (!user) return;
+    if (!user?.email) return;
     try {
       setLoading(true);
 
@@ -21,7 +21,7 @@ export default function MyOrders() {
       const data = res.data;
       const list = Array.isArray(data) ? data : data?.orders || [];
 
-      setOrders(list);
+      setOrders(Array.isArray(list) ? list : []);
     } catch (err) {
       console.error("Fetch orders error:", err);
       setOrders([]);
@@ -31,8 +31,15 @@ export default function MyOrders() {
   };
 
   useEffect(() => {
+     if (authLoading) return;
+    if (!user?.email) {
+      setLoading(false);
+      setOrders([]);
+      return;
+    }
     fetchOrders();
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, user?.email]);
 
   const cancelOrder = async (id) => {
   try {
@@ -143,4 +150,5 @@ export default function MyOrders() {
       </div>
     </div>
   );
-}
+};
+export default MyOrders;

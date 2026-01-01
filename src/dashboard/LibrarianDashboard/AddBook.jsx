@@ -15,10 +15,10 @@ const AddBook = () => {
       const book = {
       title: e.target.title.value,
       author: e.target.author.value,
-      image: e.target.img.value,
-      price: Number(e.target.price.value),
+      image: e.target.image.value,
+      price: e.target.price.value,
       status: e.target.status.value,
-      librarianEmail: user.email
+      postedBy: user?.email, 
     };
      try {
       await axiosSecure.post("/books", book);
@@ -40,6 +40,7 @@ const AddBook = () => {
         <input name="author" placeholder="Author Name" required className="input" />
         <input name="image" placeholder="Image URL" required className="input" />
         <input name="price" type="number" placeholder="Price" required className="input" />
+        <input name="category" placeholder='Category' required className="input" />
         <select name="status" className="input">
           <option value="published">Published</option>
           <option value="unpublished">Unpublished</option>

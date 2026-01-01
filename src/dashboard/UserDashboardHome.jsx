@@ -112,33 +112,30 @@ function PaymentBadge({ status }) {
     "inline-flex px-2 py-1 rounded-full text-xs font-semibold border";
   if (status === "paid")
     return (
-      <span className={`${common} bg-[color:var(--bc-accent)]/10 text-[var(--bc-accent)] border-[color:var(--bc-accent)]/20`}
+      <span className={`${common} bg-(--bc-accent)/10 text-(--bc-accent) border-(--bc-accent)/20`}
       > Paid</span>
     );
   return (
-    <span className={`${common} bg-[var(--bc-bg)] text-[var(--color-primary)] border-[var(--color-secondary)]`}
+    <span className={`${common} bg-(--bc-bg) text-(--color-primary) border-(--color-secondary)`}
     > Unpaid </span>
   );
 }
 
-export default function DashboardHome() {
+const UserDashboardHome = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const { role, roleLoading } = useRole();
 
   const [loading, setLoading] = useState(true);
-
   const [myOrders, setMyOrders] = useState([]);
   const [myPayments, setMyPayments] = useState([]);
-
   const [librarianOrders, setLibrarianOrders] = useState([]);
   const [librarianBooks, setLibrarianBooks] = useState([]);
-
   const [adminUsers, setAdminUsers] = useState([]);
   const [adminBooks, setAdminBooks] = useState([]);
 
   useEffect(() => {
-    if (roleLoading) return;
+    if (roleLoading || !role) return;
 
     const fetchData = async () => {
       try {
@@ -149,27 +146,27 @@ export default function DashboardHome() {
             axiosSecure.get("/orders/my"),
             axiosSecure.get("/payments/my"),
           ]);
-          setMyOrders(ordersRes.data?.orders || []);
-          setMyPayments(paymentsRes.data?.payments || []);
-        }
+         setMyOrders(Array.isArray(ordersRes.data) ? ordersRes.data : []);
+        setMyPayments(Array.isArray(paymentsRes.data?.payments) ? paymentsRes.data.payments : []);
+       }
 
         if (role === "librarian") {
           const [ordersRes, booksRes] = await Promise.all([
             axiosSecure.get("/librarian/orders"),
             axiosSecure.get("/librarian/books"),
           ]);
-          setLibrarianOrders(ordersRes.data?.orders || []);
-          setLibrarianBooks(booksRes.data?.books || []);
-        }
+          setLibrarianOrders(Array.isArray(ordersRes.data) ? ordersRes.data : []);
+        setLibrarianBooks(Array.isArray(booksRes.data) ? booksRes.data : []);
+      }
 
         if (role === "admin") {
           const [usersRes, booksRes] = await Promise.all([
-            axiosSecure.get("/admin/users"),
-            axiosSecure.get("/admin/books"),
+            axiosSecure.get("/users"),
+            axiosSecure.get("/manage-books"),
           ]);
-          setAdminUsers(usersRes.data?.users || []);
-          setAdminBooks(booksRes.data?.books || []);
-        }
+          setAdminUsers(Array.isArray(usersRes.data) ? usersRes.data : []);
+        setAdminBooks(Array.isArray(booksRes.data) ? booksRes.data : []);
+     }
       } catch (err) {
         console.error("Dashboard fetch error:", err);
       } finally {
@@ -183,19 +180,24 @@ export default function DashboardHome() {
   const orderStats = useMemo(() => {
     const list = role === "user" ? myOrders : role === "librarian" ? librarianOrders : [];
 
-    const pending = list.filter((o) => o.orderStatus === "pending").length;
-    const shipped = list.filter((o) => o.orderStatus === "shipped").length;
-    const delivered = list.filter((o) => o.orderStatus === "delivered").length;
-    const cancelled = list.filter((o) => o.orderStatus === "cancelled").length;
+     const count = (key, value) => list.filter((o) => o?.[key] === value).length;
 
-    const unpaid = list.filter((o) => o.paymentStatus === "unpaid").length;
-    const paid = list.filter((o) => o.paymentStatus === "paid").length;
-
-    return { pending, shipped, delivered, cancelled, unpaid, paid, total: list.length };
+    return {
+      total: list.length,
+      pending: count("orderStatus", "pending"),
+      shipped: count("orderStatus", "shipped"),
+      delivered: count("orderStatus", "delivered"),
+      cancelled: count("orderStatus", "cancelled"),
+      paid: count("paymentStatus", "paid"),
+      unpaid: count("paymentStatus", "unpaid"),
+    };
   }, [role, myOrders, librarianOrders]);
 
   const paymentTotal = useMemo(() => {
-    const total = myPayments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+    const total = (myPayments || []).reduce(
+      (sum, p) => sum + (Number(p?.amount) || 0),
+      0
+    );
     return total.toFixed(2);
   }, [myPayments]);
 
@@ -205,16 +207,16 @@ export default function DashboardHome() {
     return (list || []).slice(0, 6).map((o) => [
       o.bookTitle || "—",
       new Date(o.orderDate || o.createdAt || Date.now()).toLocaleDateString(),
-      <StatusBadge key={`s-${o._id}`} status={o.orderStatus} />,
-      <PaymentBadge key={`p-${o._id}`} status={o.paymentStatus} />,
+      <StatusBadge key={`s-${o?._id}`} status={o?.orderStatus} />,
+      <PaymentBadge key={`p-${o?._id}`} status={o?.paymentStatus} />,
     ]);
   }, [role, myOrders, librarianOrders]);
 
   const recentPaymentsRows = useMemo(() => {
     return (myPayments || []).slice(0, 6).map((p) => [
       p.paymentId || "—",
-      `$${Number(p.amount || 0).toFixed(2)}`,
-      new Date(p.date || p.createdAt || Date.now()).toLocaleDateString(),
+      `$${Number(p?.amount || 0).toFixed(2)}`,
+      new Date(p?.date || p.createdAt || Date.now()).toLocaleDateString(),
     ]);
   }, [myPayments]);
 
@@ -243,7 +245,6 @@ export default function DashboardHome() {
         </p>
       </div>
 
-      {/* Stats grid */}
       {role === "user" && (
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <StatCard title="Total Orders" value={orderStats.total} icon={<FaClipboardList />} />
@@ -282,65 +283,71 @@ export default function DashboardHome() {
       )}
 
       {/* Tables */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        {(role === "user" || role === "librarian") && (
-          <Table
-            title="Recent Orders"
-            columns={["Book", "Date", "Status", "Payment"]}
-            rows={recentOrdersRows}
-            emptyText="No orders yet."
-          />
-        )}
+<div className="grid lg:grid-cols-2 gap-6">
+  {(role === "user" || role === "librarian") && (
+    <div className="lg:col-span-2">
+      <Table
+        title="Recent Orders"
+        columns={["Book", "Date", "Status", "Payment"]}
+        rows={recentOrdersRows}
+        emptyText="No orders yet."
+      />
+    </div>
+  )}
 
-        {role === "user" && (
-          <Table
-            title="Recent Payments"
-            columns={["Payment ID", "Amount", "Date"]}
-            rows={recentPaymentsRows}
-            emptyText="No payments yet."
-          />
-        )}
+  {role === "user" && (
+    <div className="lg:col-span-2">
+      <Table
+        title="Recent Payments"
+        columns={["Payment ID", "Amount", "Date"]}
+        rows={recentPaymentsRows}
+        emptyText="No payments yet."
+      />
+    </div>
+  )}
 
-        {role === "admin" && (
-          <Table
-            title="Latest Users"
-            columns={["Name", "Email", "Role"]}
-            rows={(adminUsers || []).slice(0, 8).map((u) => [
-              u.name || "—",
-              u.email || "—",
-              <span
-                key={u._id}
-                className="inline-flex px-2 py-1 rounded-full text-xs font-semibold bg-[var(--color-secondary)] text-[var(--color-primary)]"
-              >
-                {u.role || "user"}
-              </span>,
-            ])}
-            emptyText="No users found."
-          />
-        )}
+  {role === "admin" && (
+    <Table
+      title="Latest Users"
+      columns={["Name", "Email", "Role"]}
+      rows={(adminUsers || []).slice(0, 8).map((u) => [
+        u?.name || "—",
+        u?.email || "—",
+        <span
+          key={u?._id}
+          className="inline-flex px-2 py-1 rounded-full text-xs font-semibold bg-[var(--color-secondary)] text-[var(--color-primary)]"
+        >
+          {u?.role || "user"}
+        </span>,
+      ])}
+      emptyText="No users found."
+    />
+  )}
 
-        {role === "admin" && (
-          <Table
-            title="Latest Books"
-            columns={["Title", "Author", "Status"]}
-            rows={(adminBooks || []).slice(0, 8).map((b) => [
-              b.title || "—",
-              b.author || "—",
-              <span
-                key={b._id}
-                className={`inline-flex px-2 py-1 rounded-full text-xs font-semibold border ${
-                  b.status === "published"
-                    ? "bg-[color:var(--bc-accent)]/10 text-[var(--bc-accent)] border-[color:var(--bc-accent)]/20"
-                    : "bg-[var(--bc-bg)] text-[var(--color-primary)] border-[var(--color-secondary)]"
-                }`}
-              >
-                {b.status || "—"}
-              </span>,
-            ])}
-            emptyText="No books found."
-          />
-        )}
-      </div>
+  {role === "admin" && (
+    <Table
+      title="Latest Books"
+      columns={["Title", "Author", "Status"]}
+      rows={(adminBooks || []).slice(0, 8).map((b) => [
+        b?.title || "—",
+        b?.author || "—",
+        <span
+          key={b?._id}
+          className={`inline-flex px-2 py-1 rounded-full text-xs font-semibold border ${
+            b?.status === "published"
+              ? "bg-[color:var(--bc-accent)]/10 text-[var(--bc-accent)] border-[color:var(--bc-accent)]/20"
+              : "bg-[var(--bc-bg)] text-[var(--color-primary)] border-[var(--color-secondary)]"
+          }`}
+        >
+          {b?.status || "—"}
+        </span>,
+      ])}
+      emptyText="No books found."
+    />
+  )}
+</div>
     </div>
   );
-}
+};
+
+export default UserDashboardHome;

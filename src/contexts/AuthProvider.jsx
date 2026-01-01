@@ -20,7 +20,7 @@ async function syncUserToDB(firebaseUser) {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      name: firebaseUser.displayName || "",
+      name: firebaseUser.name || "",
       email: firebaseUser.email,
     }),
       });
