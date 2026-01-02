@@ -12,26 +12,17 @@ const UserDashboard = () => {
           <h2 className="text-xl font-semibold mb-4">User Dashboard</h2>
 
           <ul className="menu space-y-1">
-            <li>
-              <NavLink
-                to="my-orders"
-                className={({ isActive }) =>
+            <li><NavLink to="my-orders" className={({ isActive }) =>
                   isActive ? "active font-semibold" : ""
                 }
-              >
-                My Orders
-              </NavLink>
+              >My Orders</NavLink>
             </li>
 
             <li>
-              <NavLink
-                to="profile"
-                className={({ isActive }) =>
+              <NavLink to="profile" className={({ isActive }) =>
                   isActive ? "active font-semibold" : ""
                 }
-              >
-                My Profile
-              </NavLink>
+              >My Profile</NavLink>
             </li>
 
             <li>
@@ -40,20 +31,16 @@ const UserDashboard = () => {
                 className={({ isActive }) =>
                   isActive ? "active font-semibold" : ""
                 }
-              >
-                Invoices
-              </NavLink>
+              >Invoices</NavLink>
             </li>
             <li>
-              <NavLink
-                to="wishlist"
+              <NavLink to="wishlist"
                 className={({ isActive }) =>
                   isActive ? "active font-semibold" : ""
                 }
-              >
-                My Wishlist
-              </NavLink>
+              >My Wishlist</NavLink>
             </li>
+            
           </ul>
         </aside>
         <main className="flex-1 bg-base-100 p-6">

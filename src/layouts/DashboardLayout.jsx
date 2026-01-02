@@ -12,6 +12,7 @@ import {
 import useRole from "../hooks/useRole";
 import Navbar from "../components/Shared/Navbar";
 import { MdPayment } from "react-icons/md";
+import { BsClipboard2Heart } from "react-icons/bs";
 
 export default function DashboardLayout() {
   const { role, roleLoading } = useRole();
@@ -25,6 +26,7 @@ export default function DashboardLayout() {
       { name: "My Profile", path: "/dashboard/profile", icon: <FaUser /> },
       { name: "Payments", path: "/dashboard/payments", icon: <MdPayment /> },
       { name: "Invoices", path: "/dashboard/invoices", icon: <FaFileInvoiceDollar /> },
+      { name: "My Wishlist", path: "/dashboard/wishlist", icon: <BsClipboard2Heart/> },
     ],
     librarian: [
       { name: "Dashboard", path: "/dashboard", icon: <FaTachometerAlt /> },
