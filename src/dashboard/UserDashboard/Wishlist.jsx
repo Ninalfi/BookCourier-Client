@@ -14,7 +14,7 @@ const Wishlist = () => {
     if (!user) return;
     try {
       setLoading(true);
-      const res = await axiosSecure.get("/wishlist"); // ✅ no email query
+      const res = await axiosSecure.get("/wishlist"); 
       setWishlist(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Wishlist fetch error:", err?.response?.data || err.message);
@@ -32,7 +32,7 @@ const Wishlist = () => {
 
   const handleRemove = async (id) => {
     try {
-      await axiosSecure.delete(`/wishlist/${id}`); // ✅ token auto attached
+      await axiosSecure.delete(`/wishlist/${id}`);
       setWishlist((prev) => prev.filter((item) => item._id !== id));
     } catch (err) {
       console.error("Wishlist remove error:", err?.response?.data || err.message);

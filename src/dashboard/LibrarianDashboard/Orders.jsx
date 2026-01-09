@@ -15,7 +15,6 @@ export default function Orders() {
     if (!user?.email) return;
     try {
       setLoading(true);
-      // ✅ correct endpoint for librarian
       const res = await axiosSecure.get("/librarian/orders");
       setOrders(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
@@ -33,7 +32,6 @@ export default function Orders() {
 
   const cancelOrder = async (id) => {
     try {
-      // ✅ correct endpoint
       await axiosSecure.patch(`/librarian/orders/${id}/cancel`);
       setOrders((prev) =>
         prev.map((o) => (o._id === id ? { ...o, orderStatus: "cancelled" } : o))
@@ -46,7 +44,6 @@ export default function Orders() {
 
   const updateStatus = async (id, orderStatus) => {
     try {
-      // ✅ correct endpoint expects { orderStatus }
       await axiosSecure.patch(`/librarian/orders/${id}/status`, { orderStatus });
       setOrders((prev) =>
         prev.map((o) => (o._id === id ? { ...o, orderStatus } : o))

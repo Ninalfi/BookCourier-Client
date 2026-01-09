@@ -9,7 +9,10 @@ const axiosSecure = axios.create({
 });
 
 export default function useAxiosSecure() {
+  const { user, loading } = useAuth();
+
   useEffect(() => {
+     if (loading) return;
     const interceptor = axiosSecure.interceptors.request.use(async (config) => {
       const auth = getAuth();
       const firebaseUser = auth.currentUser;
@@ -21,7 +24,7 @@ export default function useAxiosSecure() {
       return config;
     });
     return () => axiosSecure.interceptors.request.eject(interceptor);
-  }, []);
+  }, [user, loading]);
 
   return axiosSecure;
 }
