@@ -6,7 +6,10 @@ BookCourier is a library delivery management system designed to help students, r
 
 This project includes features for general users, librarians, and admins with a modern and responsive design, ensuring smooth navigation and a professional interface.
 
-##🌐 Live URL
+##🌐 Live URL:
+
+Client: https://book-courier-9e429.web.app
+Server: https://book-courier-server-iota.vercel.app/
 
 ##✨ Purpose
 The primary purpose of BookCourier is to revolutionize the book borrowing process by offering a seamless, end-to-end delivery service. It serves three main user roles—Reader, Librarian, and Admin—with tailored dashboards to manage orders, inventory, and users efficiently.
@@ -14,53 +17,62 @@ The primary purpose of BookCourier is to revolutionize the book borrowing proces
 ##🔑 Key Features
 💻 Core Functionality
 
-General Features
+### 🔐 Authentication & Authorization
+- Firebase Authentication (ID Token verification)
+- Role-based access control:
+  - **User** – browse books, place orders, wishlist, reviews
+  - **Librarian** – manage own books & orders
+  - **Admin** – manage users, books, roles
 
-User authentication: Email/password login & social login.
+### 👤 User Management
+- Auto user creation on first login
+- Fetch current logged-in user (`/users/me`)
+- Admin-only user list & role update
 
-Secure registration with strong password validation.
+### 📚 Book Management
+- Add / update / delete books (Admin & Librarian)
+- Public book listing with:
+  - Pagination
+  - Search
+  - Price sorting
+- Book status control (published / unpublished)
 
-Profile management with image upload.
+### 🛒 Orders System
+- Place orders
+- Cancel pending orders
+- Librarian order management
+- Order status updates
 
-Responsive design for mobile, tablet, and desktop.
+### ❤️ Wishlist
+- Add/remove books to wishlist
+- Prevent duplicate wishlist entries
 
-Light and dark mode toggle.
+### ⭐ Reviews
+- Users can review only books they ordered
+- Review eligibility check
 
-Interactive homepage with banner sliders and animated sections.
+### 💳 Payments
+- Secure payment tracking
+- Payment status update per order
+- User payment history
 
-Latest books showcase and city coverage map.
+---
 
-Search and sort functionality for books.
+## 🛠️ Technologies Used
 
-Book wishlist and rating/review system.
+### Backend
+- **Node.js**
+- **Express.js**
+- **MongoDB** (Native MongoDB Driver)
+- **Firebase Admin SDK** (Authentication)
 
-User Dashboard
+### Security & Utilities
+- **dotenv** – environment variables
+- **cors** – cross-origin requests
+- **crypto** – internal utilities
+- **nodemon** – development auto-reload
 
-View and manage orders (Cancel/Pay).
-
-See payment invoices.
-
-Update profile details.
-
-Wishlist of books added from Book Details page.
-
-Librarian Dashboard
-
-Add new books with details (image, name, author, price, status).
-
-Manage books (edit, publish/unpublish).
-
-View and manage orders for books added.
-
-Update order status from "pending" → "shipped" → "delivered".
-
-Admin Dashboard
-
-Manage all users (assign roles as Librarian/Admin).
-
-Manage all books (publish/unpublish/delete books and associated orders).
-
-Profile management.
+---
 
 ## Dependencies:
 
@@ -68,3 +80,11 @@ Profile management.
 --npm install leaflet react-leaflet
 --npm install framer-motion
 --npm install recharts
+```bash
+express
+mongodb
+firebase-admin
+dotenv
+cors
+nodemon
+crypto

@@ -15,7 +15,7 @@ const AllBooks = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:3000/books?page=${pageNumber}&limit=${limit}&search=${currentSearch}&sort=${currentSort}`
+        `https://book-courier-server-iota.vercel.app/books?page=${pageNumber}&limit=${limit}&search=${currentSearch}&sort=${currentSort}`
       );
       const data = await res.json();
 

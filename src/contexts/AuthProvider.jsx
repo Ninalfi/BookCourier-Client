@@ -7,7 +7,7 @@ export const useAuth = () => useContext(AuthContext);
 
 const googleProvider = new GoogleAuthProvider();
 //const githubProvider = new GithubAuthProvider();
-const API = "http://localhost:3000";
+const API = "https://book-courier-server-iota.vercel.app";
 
 async function syncUserToDB(firebaseUser) {
   if (!firebaseUser?.email) return;

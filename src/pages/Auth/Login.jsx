@@ -5,7 +5,7 @@ import SocialLogin from "./SocialLogin";
 import { useForm } from "react-hook-form";
 import { FaEye, FaRegEyeSlash } from "react-icons/fa";
 
-const API = "http://localhost:3000";
+const API = "https://book-courier-server-iota.vercel.app";
 
 const Login = () => {
   const { register, formState: { errors } } = useForm();

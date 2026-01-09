@@ -6,7 +6,7 @@ import OrderModal from "./modals/OrderModal";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 
-const API = "http://localhost:3000";
+const API = "https://book-courier-server-iota.vercel.app";
 
 const BookDetails = () => {
   const { id } = useParams();

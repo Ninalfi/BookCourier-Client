@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useAuth } from '../../contexts/AuthProvider';
 
-const API = "http://localhost:3000";
+const API = "https://book-courier-server-iota.vercel.app";
 
 
 const SocialLogin = () => {
