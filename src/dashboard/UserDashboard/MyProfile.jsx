@@ -34,7 +34,8 @@ const MyProfile = () => {
     setLoading(true);
 
     try {
-      let photoURL = user?.photoURL || "";
+      
+      let photoURL = user?.photoURL || " https://i.ibb.co.com/0y4FCqHp/5472d1b09d3d724228109d381d617326.jpg";
       if (photo) {
         photoURL = await uploadToImgbb(photo);
       }
@@ -58,7 +59,7 @@ const MyProfile = () => {
         <div className="card bg-base-200 p-6">
           <div className="flex flex-col items-center text-center">
             <img
-              src={user?.photoURL || "https://i.ibb.co/ZYW3VTp/brown-brim.png"}
+              src={user?.photoURL}
               alt="Profile"
               className="w-28 h-28 rounded-full object-cover mb-4"
             />

@@ -26,6 +26,8 @@ import LibrarianRoute from "../layouts/LibrarianRoute";
 import AdminRoute from "../layouts/AdminRoute";
 import UserDashboardHome from "../dashboard/UserDashboardHome";
 import EditBook from "../dashboard/LibrarianDashboard/EditBook";
+import Contact from "../pages/Auth/Contact";
+import Blog from "../components/Shared/Blog";
 
 
 export const router = createBrowserRouter([
@@ -40,6 +42,18 @@ export const router = createBrowserRouter([
         {
           path: 'books',
           Component: AllBooks
+        },
+        {
+          path:'contact',
+          element: (
+            <PrivateRoute>
+              <Contact />
+            </PrivateRoute>
+          ),
+        },
+       {
+    path: 'blog',
+    Component: Blog
         },
         {
     path: "books/:id",

@@ -13,6 +13,8 @@ const Register = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
   const onSubmit = async (data) => {
     setError("");
 
@@ -20,15 +22,17 @@ const Register = () => {
       setError("Passwords do not match.");
       return;
     }
-
     try {
-await registerUser(data.email, data.password, data.name);
-await updateUserProfile(data.name, data.photo);
+      setLoading(true); 
+      await registerUser(data.email, data.password, data.name);
+      await updateUserProfile(data.name, data.photo || "");
 
       navigate("/");
     } catch (err) {
-      console.error(err);
-      setError(err?.message ||  "Registration failed. Try again.");
+       console.error(err);
+      setError(err?.message || "Registration failed. Try again.");
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -127,7 +131,6 @@ await updateUserProfile(data.name, data.photo);
             )}
           </div>
 
-          {/* Confirm Password */}
           <div className="relative">
             <label className="label">
               <span className="label-text text-(--bc-text)">Confirm Password</span>
@@ -152,16 +155,17 @@ await updateUserProfile(data.name, data.photo);
             )}
           </div>
 
-          {/* Register Button */}
           <button
             type="submit"
-            className="w-full bg-(--color-primary) hover:bg-[#5d432c] text-white py-2 rounded-lg font-semibold transition"
+            disabled={loading}
+             className="w-full bg-(--color-primary) hover:bg-[#5d432c] text-white py-2 rounded-lg font-semibold transition disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            Register
+            {loading && <span className="loading loading-spinner loading-sm" />}
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
-        {/* Footer */}
+   
         <div className="mt-6 text-center">
           <p className="text-(--bc-text)/80">
             Already have an account?{" "}

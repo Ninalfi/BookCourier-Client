@@ -30,7 +30,7 @@ const CartPage = () => {
         userId: user?.uid || "guest",
       }));
 
-      await fetch("https://book-courier-server-iota.vercel.app/my-orders", {
+      await fetch("localhost:3000/my-orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orders),

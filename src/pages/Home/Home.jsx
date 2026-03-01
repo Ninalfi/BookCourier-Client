@@ -5,6 +5,9 @@ import { NavLink } from 'react-router';
 import WhyUs from './WhyUs';
 import ExchangeOffers from './ExchangeOffers';
 import Reviews from './Reviews';
+import Explore from './Explore';
+import About from './About';
+import FAQ from './FAQ';
 
 const Home = () => {
     return (
@@ -13,7 +16,10 @@ const Home = () => {
             <NavLink to='/coverage'><CoverageMap></CoverageMap></NavLink>
             <WhyUs></WhyUs>
             <ExchangeOffers></ExchangeOffers>
+            <Explore></Explore>
             <Reviews></Reviews>
+            <About></About>
+            <FAQ></FAQ>
         </div>
     );
 };

@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
-  FaSun, FaMoon, FaHome, FaBook, FaTachometerAlt, FaMapMarkedAlt,
-  FaPhoneAlt, FaEnvelope, FaClock, FaComments, FaHeart, FaShoppingCart, FaBars
+  FaSun,
+  FaMoon,
+  FaHome,
+  FaBook,
+  FaTachometerAlt,
+  FaMapMarkedAlt,
+  FaPhoneAlt,
+  FaEnvelope,
+  FaClock,
+  FaComments,
+  FaShoppingCart,
+  FaBars,
+  FaBlog,
 } from "react-icons/fa";
 import Logo from "./Logo";
 import { useAuth } from "../../contexts/AuthProvider";
@@ -10,13 +21,19 @@ import { useCart } from "../../contexts/CartContext";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
+  const { cart } = useCart();
+
   const [theme, setTheme] = useState("light");
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
+  // ✅ Load theme once (and do not stack classes)
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
-    setTheme(savedTheme);
+    document.documentElement.classList.remove("light", "dark");
     document.documentElement.classList.add(savedTheme);
+    setTheme(savedTheme);
   }, []);
 
   const handleThemeToggle = () => {
@@ -27,120 +44,204 @@ const Navbar = () => {
     localStorage.setItem("theme", next);
   };
 
+  const navItemClass = ({ isActive }) =>
+    `flex items-center gap-2 transition-colors ${
+      isActive ? "text-(--color-primary) font-semibold" : "text-(--bc-text)"
+    } hover:text-(--bc-accent)`;
+
   const links = (
     <>
-      <li><NavLink to="/" className="flex items-center gap-1 dark:text-(--color-primary) hover:text-[var(--bc-accent)]"><FaHome /> Home</NavLink></li>
-      <li><NavLink to="/books" className="flex items-center gap-1 hover:text-(--bc-accent) dark:text-(--color-primary)"><FaBook /> Books</NavLink></li>
-      <li><NavLink to="/coverage" className="flex items-center dark:text-(--color-primary) gap-1 hover:text-(--bc-accent)"><FaMapMarkedAlt /> Coverage</NavLink></li>
-       <li><NavLink to="/dashboard" className="flex items-center dark:text-(--color-primary) gap-1 hover:text-(--bc-accent)"><FaTachometerAlt /> Dashboard</NavLink></li>
+      <li>
+        <NavLink to="/" className={navItemClass}>
+          <FaHome /> Home
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/books" className={navItemClass}>
+          <FaBook /> Books
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/coverage" className={navItemClass}>
+          <FaMapMarkedAlt /> Coverage
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/blog" className={navItemClass}>
+          <FaBlog /> Blog
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/contact" className={navItemClass}>
+          <FaComments /> Contact
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/dashboard" className={navItemClass}>
+          <FaTachometerAlt /> Dashboard
+        </NavLink>
+      </li>
     </>
-
   );
 
-  const {cart} = useCart();
-    const totalItems = cart.reduce(
-    (sum, item) => sum + (item.quantity || 1),
-    0
-  );
   return (
-    <div className="w-full shadow-md">
-    <div className="text-(--bc-surface) text-sm bg-(--color-primary) py-2 px-4 flex justify-between items-center">
-        <div className="flex flex-col md:flex-row md:gap-6">
-          <span className="flex items-center gap-1"><FaPhoneAlt /> +880 1234 567890</span>
-          <span className="flex items-center gap-1"><FaEnvelope /> book_courier@gmail.com</span>
-          <span className="hidden md:flex items-center gap-1"><FaClock /> Sat – Fri: 7 AM – 11 PM</span>
-        </div>
-        <div className="flex gap-4 mt-2 md:mt-0">
-          <span className="flex items-center gap-1 cursor-pointer"><FaComments /> Live Chat</span>
-        </div>
-      </div>
-
-      <div className="bg-(--bc-bg) py-4 px-4 flex justify-between items-center w-full mx-auto">
-
-        <Link to="/" className="flex items-center text-2xl font-bold text-(--bc-text)">
-          <Logo />
-        </Link>
-
-        <ul className="hidden lg:flex menu-horizontal gap-6 text-(--bc-text) font-medium">
-          {links}
-        </ul>
-
-        <div className="flex items-center gap-4">
-
-          <button
-            onClick={handleThemeToggle}
-            className="btn btn-circle border hidden md:flex bg-(--bc-surface) text-(--bc-text)"
-          >
-            {theme === "dark" ? <FaSun /> : <FaMoon />}
-          </button>
-
-          <Link to="/cart" className="relative p-3 border rounded-full border-(--color-primary)">
-            <FaShoppingCart className="text-(--color-primary)" />
-             {totalItems > 0 && (
-            <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-              {totalItems}
+    // ✅ Sticky wrapper (both top bar + main nav stick together)
+    <header className="sticky top-0 z-50 w-full">
+      {/* Top info bar */}
+      <div className="bg-(--color-primary) text-(--bc-surface) text-sm py-2 px-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+          <div className="flex flex-col md:flex-row md:items-center md:gap-6">
+            <span className="flex items-center gap-2">
+              <FaPhoneAlt /> +880 1234 567890
             </span>
-            )}
-          </Link>
-
-          <div className="hidden md:flex">
-            {!user ? (
-              <div className="flex gap-4">
-                <NavLink to="/login" className="btn-outline">Login</NavLink>
-                <NavLink to="/register" className="btn-primary">Register</NavLink>
-              </div>
-            ) : (
-              <div className="flex items-center gap-3">
-                <div className="relative group">
-                  <img src={user?.photoURL} alt={user.displayName} className="w-10 h-10 rounded-full border cursor-pointer" />
-                  <span className="absolute hidden group-hover:block bg-black text-white text-sm px-2 py-1 rounded-md -bottom-10 left-1/2 transform -translate-x-1/2">
-                    {user?.displayName}
-                  </span>
-                </div>
-                <button 
-                  className="btn-outline" 
-                  onClick={() => logOut().catch(err => console.error(err))}
-                >Logout</button>
-              </div>
-            )}
+            <span className="flex items-center gap-2">
+              <FaEnvelope /> book_courier@gmail.com
+            </span>
+            <span className="hidden md:flex items-center gap-2">
+              <FaClock /> Sat – Fri: 7 AM – 11 PM
+            </span>
           </div>
 
-          <button className="lg:hidden p-3 border rounded-full border-(--color-primary)" onClick={() => setMenuOpen(!menuOpen)}>
-            <FaBars className="text-(--color-primary)"/>
+          <button
+            type="button"
+            className="hidden md:flex items-center gap-2 hover:opacity-90"
+          >
+            <FaComments /> Live Chat
           </button>
-
         </div>
       </div>
 
-      {menuOpen && (
-        <div className="bg-(--bc-surface) p-4 flex flex-col gap-3 lg:hidden border-t border-(--color-primary) text-(--bc-primary">
-          <ul className="flex flex-col gap-2">{links}</ul>
+      {/* Main navbar */}
+      <div className="border-b border-base-300 bg-(--bc-bg)/90 backdrop-blur-md shadow-md transition-colors">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
+          {/* Logo */}
+          <Link to="/" className="flex items-center text-2xl font-bold text-(--bc-text)">
+            <Logo />
+          </Link>
 
-          <div className="mt-2 flex flex-col gap-2">
-            {!user ? (
-              <>
-                <NavLink to="/login" className="btn-outline w-full dark:text-(--color-primary) text-center">Login</NavLink>
-                <NavLink to="/register" className="btn-primary w-full dark:text-(--color-primary) text-center">Register</NavLink>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center gap-3">
-                  <img src={user?.photoURL} className="w-10 h-10 rounded-full border" />
-                  <p>{user?.displayName}</p>
-                </div>
-                <button className="btn-outline w-full dark:text-(--color-primary)" onClick={() => logOut()}>Logout</button>
-              </>
-            )}
+          {/* Desktop links */}
+          <ul className="hidden lg:flex menu-horizontal gap-6 font-medium">
+            {links}
+          </ul>
 
-            {/* Theme toggle mobile */}
-            <button onClick={handleThemeToggle} className="btn btn-circle border bg-(--bc-surface) text-(--bc-text) mt-2">
+          {/* Right actions */}
+          <div className="flex items-center gap-3">
+            {/* Theme toggle desktop */}
+            <button
+              onClick={handleThemeToggle}
+              className="btn btn-circle border hidden md:flex bg-(--bc-surface) text-(--bc-text)"
+              aria-label="Toggle theme"
+              title="Toggle theme"
+            >
               {theme === "dark" ? <FaSun /> : <FaMoon />}
+            </button>
+
+            {/* Cart */}
+            <Link
+              to="/cart"
+              className="relative p-3 border rounded-full border-(--color-primary)"
+              aria-label="Cart"
+              title="Cart"
+            >
+              <FaShoppingCart className="text-(--color-primary)" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                  {totalItems}
+                </span>
+              )}
+            </Link>
+
+            {/* Auth buttons desktop */}
+            <div className="hidden md:flex">
+              {!user ? (
+                <div className="flex gap-3">
+                  <NavLink to="/login" className="btn-outline">
+                    Login
+                  </NavLink>
+                  <NavLink to="/register" className="btn-primary">
+                    Register
+                  </NavLink>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <div className="relative group">
+                    <img
+                      src={user?.photoURL || "https://i.ibb.co.com/0y4FCqHp/5472d1b09d3d724228109d381d617326.jpg"}
+                      alt="Profile"
+                      className="w-10 h-10 rounded-full border cursor-pointer"
+                    />
+                    <span className="absolute hidden group-hover:block bg-black text-white text-sm px-2 py-1 rounded-md -bottom-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+                      {user?.displayName}
+                    </span>
+                  </div>
+
+                  <button
+                    className="btn-outline"
+                    onClick={() => logOut().catch(() => {})}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile menu button */}
+            <button
+              className="lg:hidden p-3 border rounded-full border-(--color-primary)"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Open menu"
+              title="Menu"
+            >
+              <FaBars className="text-(--color-primary)" />
             </button>
           </div>
         </div>
-      )}
 
-    </div>
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div className="lg:hidden border-t border-(--color-primary) bg-(--bc-surface) p-4">
+            <ul className="flex flex-col gap-3">{links}</ul>
+
+            <div className="mt-4 flex flex-col gap-3">
+              {!user ? (
+                <>
+                  <NavLink to="/login" className="btn-outline w-full text-center">
+                    Login
+                  </NavLink>
+                  <NavLink to="/register" className="btn-primary w-full text-center">
+                    Register
+                  </NavLink>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={user?.photoURL || "https://i.ibb.co.com/0y4FCqHp/5472d1b09d3d724228109d381d617326.jpg"}
+                      className="w-10 h-10 rounded-full border"
+                      alt="user"
+                    />
+                    <p className="text-(--bc-text)">{user?.displayName}</p>
+                  </div>
+                  <button className="btn-outline w-full" onClick={() => logOut()}>
+                    Logout
+                  </button>
+                </>
+              )}
+
+              {/* Theme toggle mobile */}
+              <button
+                onClick={handleThemeToggle}
+                className="btn btn-circle border bg-(--bc-surface) text-(--bc-text)"
+                aria-label="Toggle theme"
+                title="Toggle theme"
+              >
+                {theme === "dark" ? <FaSun /> : <FaMoon />}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </header>
   );
 };
 

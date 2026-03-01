@@ -8,17 +8,28 @@ import { FaEye, FaRegEyeSlash } from "react-icons/fa";
 const API = "https://book-courier-server-iota.vercel.app";
 
 const Login = () => {
-  const { register, formState: { errors } } = useForm();
+  const {
+    register,
+    formState: { errors },
+    setValue,  
+  } = useForm();
+
   const { signInUser } = useAuth();
   const navigate = useNavigate();
+
+  const DEMO = {
+    email: "demo@bookcourier.com",
+    password: "Demo@12345",
+  };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isDemoFilling, setIsDemoFilling] = useState(false);
 
-    const syncUserToDB = async (firebaseUser) => {
+  const syncUserToDB = async (firebaseUser) => {
     const token = await firebaseUser.getIdToken(true);
 
     await fetch(`${API}/users`, {
@@ -32,6 +43,35 @@ const Login = () => {
       }),
     });
   };
+const handleDemoFill = async () => {
+  if (loading) return;
+
+  setIsDemoFilling(true);
+  setError("");
+
+  // Autofill inputs
+  setEmail(DEMO.email);
+  setPassword(DEMO.password);
+  setValue("email", DEMO.email);
+  setValue("password", DEMO.password);
+
+  await new Promise((r) => setTimeout(r, 300)); // small UX delay
+
+  try {
+    setLoading(true);
+
+    const firebaseUser = await signInUser(DEMO.email, DEMO.password);
+    await syncUserToDB(firebaseUser);
+
+    navigate("/dashboard");
+  } catch (err) {
+    console.error("Demo login error:", err);
+    setError("Demo login failed");
+  } finally {
+    setLoading(false);
+    setIsDemoFilling(false);
+  }
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,15 +90,28 @@ const Login = () => {
     }
   };
 
-
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-(--bc-bg) px-4 py-10">
-
       <div className="bg-(--bc-surface) shadow-xl rounded-xl p-8 w-full max-w-md border border-(--color-secondary)">
         <h2 className="text-3xl font-bold text-center text-(--color-primary) mb-2">
-          Welcome Back </h2>
-  <p className="text-center text-(--bc-text)/70 mb-6">
-          Login to continue your journey</p>
+          Welcome Back
+        </h2>
+        <p className="text-center text-(--bc-text)/70 mb-6">
+          Login to continue your journey
+        </p>
+
+        {/* ✅ Demo Login Button */}
+        <button
+          type="button"
+          onClick={handleDemoFill}
+          disabled={loading || isDemoFilling}
+          className="w-full mb-4 border border-(--color-secondary) hover:bg-gray-50 text-(--bc-text) py-2 rounded-lg font-semibold transition disabled:opacity-50 flex items-center justify-center gap-2"
+        >
+          {(isDemoFilling || loading) && (
+            <span className="loading loading-spinner loading-sm" />
+          )}
+          {isDemoFilling ? "Filling..." : "Demo Login"}
+        </button>
 
         {/* Error */}
         {error && (
@@ -66,6 +119,7 @@ const Login = () => {
             {error}
           </p>
         )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="label">
@@ -76,10 +130,14 @@ const Login = () => {
               placeholder="your@email.com"
               {...register("email", { required: "Email is required" })}
               onChange={(e) => setEmail(e.target.value)}
+              value={email} // ✅ controlled so demo fill shows
+              disabled={loading}
               className="input input-bordered w-full text-(--bc-text) border-(--color-secondary) focus:border-(--color-primary)"
             />
             {errors.email && (
-              <p className="text-(--bc-accent) text-sm mt-1">{errors.email.message}</p>
+              <p className="text-(--bc-accent) text-sm mt-1">
+                {errors.email.message}
+              </p>
             )}
           </div>
 
@@ -92,9 +150,14 @@ const Login = () => {
               placeholder="Enter your password"
               {...register("password", {
                 required: "Password is required",
-                minLength: { value: 6, message: "Password must be at least 6 characters" },
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
               })}
               onChange={(e) => setPassword(e.target.value)}
+              value={password} // ✅ controlled so demo fill shows
+              disabled={loading}
               className="input input-bordered w-full pr-10 text-(--bc-text) border-(--color-secondary) focus:border-(--color-primary)"
             />
 
@@ -103,6 +166,7 @@ const Login = () => {
               type="button"
               className="absolute inset-y-10 right-3 flex items-center"
               onClick={() => setShowPassword(!showPassword)}
+              disabled={loading}
             >
               {showPassword ? (
                 <FaRegEyeSlash className="h-5 w-5 text-gray-500" />
@@ -122,8 +186,9 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-(--color-primary) hover:bg-[#5d432c] text-white py-2 rounded-lg font-semibold transition disabled:opacity-50"
+            className="w-full bg-(--color-primary) hover:bg-[#5d432c] text-white py-2 rounded-lg font-semibold transition disabled:opacity-50 flex items-center justify-center gap-2"
           >
+            {loading && <span className="loading loading-spinner loading-sm" />}
             {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
@@ -145,7 +210,6 @@ const Login = () => {
             </Link>
           </p>
         </div>
-
       </div>
     </div>
   );

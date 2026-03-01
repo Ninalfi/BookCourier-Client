@@ -15,7 +15,8 @@ const AllBooks = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://book-courier-server-iota.vercel.app/books?page=${pageNumber}&limit=${limit}&search=${currentSearch}&sort=${currentSort}`
+        `http://localhost:3000/books?page=${pageNumber}&limit=${limit}&search=${currentSearch}&sort=${currentSort}`
+        //`https://book-courier-server-iota.vercel.app/books?page=${pageNumber}&limit=${limit}&search=${currentSearch}&sort=${currentSort}`
       );
       const data = await res.json();
 
@@ -55,7 +56,7 @@ if (!Array.isArray(data)) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
+    <div className="max-w-full mx-auto bg-amber-50 px-10 py-10">
       {/* Search & Sort */}
       <div className="flex justify-between mb-6">
         <input
@@ -81,11 +82,16 @@ if (!Array.isArray(data)) {
         {books.map((book) => (
           <Link key={book._id} to={`/books/${book._id}`}>
             <div className="bg-[var(--bc-surface)] rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition">
-              <img
-                src={book.img || "https://via.placeholder.com/150"}
-                alt={book.title}
-                className="w-full h-60 object-cover"
-              />
+<img
+  src={book.img || "https://placehold.co/300x400?text=No+Cover"}
+  alt={book.title}
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src = "https://placehold.co/300x400?text=No+Cover";
+  }}
+  className="w-full h-60 object-cover"
+/>
+
               <div className="p-4">
                 <h3 className="font-semibold text-lg text-[var(--color-primary)]">
                   {book.title}
