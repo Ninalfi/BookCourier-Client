@@ -28,6 +28,9 @@ import UserDashboardHome from "../dashboard/UserDashboardHome";
 import EditBook from "../dashboard/LibrarianDashboard/EditBook";
 import Contact from "../pages/Auth/Contact";
 import Blog from "../components/Shared/Blog";
+import Reports from "../dashboard/AdminDashboard/Reports";
+import Categories from "../dashboard/AdminDashboard/Categories";
+import Settings from "../dashboard/AdminDashboard/Settings";
 
 
 export const router = createBrowserRouter([
@@ -169,7 +172,31 @@ export const router = createBrowserRouter([
             <ManageUsers />
           </AdminRoute>
         ) 
-      }
+      },
+      {
+        path: "reports",
+        element: (
+          <AdminRoute>
+            <Reports></Reports>
+          </AdminRoute>
+        )
+      },
+      {
+        path: "categories",
+        element: (
+        <AdminRoute>
+          <Categories></Categories>
+        </AdminRoute>
+        )
+      },
+      {
+        path: "settings",
+        element: (
+          <AdminRoute>
+            <Settings></Settings>
+          </AdminRoute>
+        )
+      },
     ]
   },
  

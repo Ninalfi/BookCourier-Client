@@ -27,8 +27,8 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+ const defaultAvatar = "https://i.ibb.co.com/0y4FCqHp/5472d1b09d3d724228109d381d617326.jpg";
 
-  // ✅ Load theme once (and do not stack classes)
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
     document.documentElement.classList.remove("light", "dark");
@@ -85,7 +85,7 @@ const Navbar = () => {
   );
 
   return (
-    // ✅ Sticky wrapper (both top bar + main nav stick together)
+
     <header className="sticky top-0 z-50 w-full">
       {/* Top info bar */}
       <div className="bg-(--color-primary) text-(--bc-surface) text-sm py-2 px-4">
@@ -164,16 +164,19 @@ const Navbar = () => {
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
+          
                   <div className="relative group">
                     <img
-                      src={user?.photoURL || "https://i.ibb.co.com/0y4FCqHp/5472d1b09d3d724228109d381d617326.jpg"}
-                      alt="Profile"
+                      src={user?.photoURL || defaultAvatar}
+                      onError={(e) => (e.target.src = defaultAvatar)}
+                      alt="user"
                       className="w-10 h-10 rounded-full border cursor-pointer"
                     />
                     <span className="absolute hidden group-hover:block bg-black text-white text-sm px-2 py-1 rounded-md -bottom-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
                       {user?.displayName}
                     </span>
                   </div>
+                  
 
                   <button
                     className="btn-outline"
@@ -216,8 +219,8 @@ const Navbar = () => {
                 <>
                   <div className="flex items-center gap-3">
                     <img
-                      src={user?.photoURL || "https://i.ibb.co.com/0y4FCqHp/5472d1b09d3d724228109d381d617326.jpg"}
-                      className="w-10 h-10 rounded-full border"
+                      src={user?.photoURL || defaultAvatar}
+                      className="w-10 h-10 rounded-full border object-cover"
                       alt="user"
                     />
                     <p className="text-(--bc-text)">{user?.displayName}</p>
@@ -227,8 +230,6 @@ const Navbar = () => {
                   </button>
                 </>
               )}
-
-              {/* Theme toggle mobile */}
               <button
                 onClick={handleThemeToggle}
                 className="btn btn-circle border bg-(--bc-surface) text-(--bc-text)"

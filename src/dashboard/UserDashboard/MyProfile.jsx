@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthProvider";
+import { EmailAuthProvider, getAuth, reauthenticateWithCredential, updatePassword } from "firebase/auth";
 
 const MyProfile = () => {
   const { user, updateUserProfile } = useAuth();
@@ -7,6 +8,12 @@ const MyProfile = () => {
   const [name, setName] = useState(user?.displayName || "");
   const [photo, setPhoto] = useState(null); 
   const [loading, setLoading] = useState(false);
+
+    const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [pwLoading, setPwLoading] = useState(false);
+  const [pwMsg, setPwMsg] = useState("");
 
   const uploadToImgbb = async (file) => {
     const key = import.meta.env.VITE_IMGBB_KEY;
@@ -50,13 +57,67 @@ const MyProfile = () => {
       setLoading(false);
     }
   };
+    const handlePasswordUpdate = async (e) => {
+    e.preventDefault();
+    setPwMsg("");
+
+    if (!user) return setPwMsg("Please login first.");
+
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+      return setPwMsg("All password fields are required.");
+    }
+    if (newPassword.length < 6) {
+      return setPwMsg("New password must be at least 6 characters.");
+    }
+    if (newPassword !== confirmNewPassword) {
+      return setPwMsg("New password and confirm password do not match.");
+    }
+
+    const providers = user?.providerData?.map((p) => p.providerId) || [];
+    const isEmailPass = providers.includes("password");
+    if (!isEmailPass) {
+      return setPwMsg("Password update is only available for Email/Password accounts.");
+    }
+
+    try {
+      setPwLoading(true);
+
+      const auth = getAuth();
+      const firebaseUser = auth.currentUser;
+
+      if (!firebaseUser?.email) {
+        throw new Error("Missing user email for re-authentication.");
+      }
+            const credential = EmailAuthProvider.credential(firebaseUser.email, currentPassword);
+      await reauthenticateWithCredential(firebaseUser, credential);
+            await updatePassword(firebaseUser, newPassword);
+
+      setPwMsg("Password updated successfully!");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+    } catch (err) {
+      console.error(err);
+            if (err?.code === "auth/wrong-password") {
+        setPwMsg("Current password is incorrect.");
+      } else if (err?.code === "auth/too-many-requests") {
+        setPwMsg("Too many attempts. Try again later.");
+      } else if (err?.code === "auth/requires-recent-login") {
+        setPwMsg("Please logout and login again, then try updating the password.");
+      } else {
+        setPwMsg(err?.message || "Failed to update password.");
+      }
+    } finally {
+      setPwLoading(false);
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
       <h2 className="text-3xl font-semibold mb-8">My Profile</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="card bg-base-200 p-6">
+        <div className="card bg-base-100 p-6">
           <div className="flex flex-col items-center text-center">
             <img
               src={user?.photoURL}
@@ -70,7 +131,7 @@ const MyProfile = () => {
           </div>
         </div>
 
-        <div className="card bg-base-200 p-6 md:col-span-2">
+        <div className="card bg-base-100 p-6 md:col-span-2">
           <h3 className="text-xl font-semibold mb-4">Update Profile</h3>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -107,8 +168,64 @@ const MyProfile = () => {
             </button>
           </form>
         </div>
+        </div>
+
+                    <div className="card bg-base-100 p-6 max-w-6xl mx-auto mt-5">
+            <h3 className="text-xl font-semibold mb-4">Update Password</h3>
+
+            {pwMsg ? (
+              <div className="alert alert-info mb-4">
+                <span className="text-sm">{pwMsg}</span>
+              </div>
+            ) : null}
+             <form onSubmit={handlePasswordUpdate} className="space-y-4">
+              <div>
+                <label className="label">Current Password</label>
+                <input
+                  type="password"
+                  className="input input-bordered w-full"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Enter current password"
+                  disabled={pwLoading}
+                />
+              </div>
+             <div>
+                <label className="label">New Password</label>
+                <input
+                  type="password"
+                  className="input input-bordered w-full"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter new password"
+                  disabled={pwLoading}
+                />
+                <p className="text-xs opacity-70 mt-1">
+                  Must be at least 6 characters.
+                </p>
+              </div>
+               <div>
+                <label className="label">Confirm New Password</label>
+                <input
+                  type="password"
+                  className="input input-bordered w-full"
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  placeholder="Re-enter new password"
+                  disabled={pwLoading}
+                />
+              </div>
+
+              <button type="submit" className="btn btn-primary w-full" disabled={pwLoading}>
+                {pwLoading ? "Updating Password..." : "Update Password"}
+              </button>
+            </form>
+            <p className="text-xs opacity-70 mt-4">
+              Note: If you logged in with Google/Facebook, password update may not be available unless you created a password account.
+            </p>
+          </div>
       </div>
-    </div>
+
   );
 };
 

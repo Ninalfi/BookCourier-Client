@@ -39,6 +39,9 @@ export default function DashboardLayout() {
       { name: "All Users", path: "/dashboard/all-users", icon: <FaUsers /> },
       { name: "Manage Books", path: "/dashboard/manage-books", icon: <FaBook /> },
       { name: "My Profile", path: "/dashboard/profile", icon: <FaUser /> },
+      { name: "Reports", path: "/dashboard/reports", icon: <FaFileInvoiceDollar /> },
+      {name: "Categories", path: "/dashboard/categories", icon: <FaClipboardList />},
+      { name: "Settings", path: "/dashboard/settings", icon: <FaUser /> },
     ],
   };
 
