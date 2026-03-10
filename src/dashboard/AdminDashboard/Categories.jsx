@@ -1,8 +1,7 @@
-// src/pages/Dashboard/Admin/Categories.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { FaSearch, FaSyncAlt, FaLayerGroup } from "react-icons/fa";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API = import.meta.env.VITE_API_URL || "https://book-courier-server-iota.vercel.app";
 
 export default function Categories() {
   const [loading, setLoading] = useState(true);

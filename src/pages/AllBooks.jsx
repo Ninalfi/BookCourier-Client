@@ -15,8 +15,7 @@ const AllBooks = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:3000/books?page=${pageNumber}&limit=${limit}&search=${currentSearch}&sort=${currentSort}`
-        //`https://book-courier-server-iota.vercel.app/books?page=${pageNumber}&limit=${limit}&search=${currentSearch}&sort=${currentSort}`
+        `https://book-courier-server-iota.vercel.app/books?page=${pageNumber}&limit=${limit}&search=${currentSearch}&sort=${currentSort}`
       );
       const data = await res.json();
 
@@ -80,7 +79,7 @@ if (!Array.isArray(data)) {
       {/* Books Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {books.map((book) => (
-          <Link key={book._id} to={`/books/${book._id}`}>
+          <Link key={book._id} to={`/${book._id}`}>
             <div className="bg-[var(--bc-surface)] rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition">
 <img
   src={book.img || "https://placehold.co/300x400?text=No+Cover"}

@@ -1,8 +1,7 @@
-// src/pages/Dashboard/Admin/Reports.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { FaChartBar, FaSyncAlt, FaTruck, FaUsers, FaBookOpen } from "react-icons/fa";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API = import.meta.env.VITE_API_URL || "https://book-courier-server-iota.vercel.app";
 
 export default function Reports() {
   const [loading, setLoading] = useState(true);

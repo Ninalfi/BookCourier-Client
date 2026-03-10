@@ -29,7 +29,7 @@ function StatPill({ icon: Icon, title, value }) {
 }
 
 export default function Contact() {
-  const API = "http://localhost:3000";
+  const API = "https://book-courier-server-iota.vercel.app";
 
   const [form, setForm] = useState({
     name: "",

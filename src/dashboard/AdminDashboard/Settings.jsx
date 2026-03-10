@@ -1,4 +1,3 @@
-// src/pages/Dashboard/Admin/Settings.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import {
@@ -18,7 +17,7 @@ export default function Settings() {
   const { user, updateUserProfile, logOut } = useAuth();
 
   const API = useMemo(
-    () => import.meta.env.VITE_API_URL || "http://localhost:3000",
+    () => import.meta.env.VITE_API_URL || "https://book-courier-server-iota.vercel.app",
     []
   );
 
