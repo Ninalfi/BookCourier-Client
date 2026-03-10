@@ -10,7 +10,7 @@ const AllBooks = () => {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
   const [category, setCategory] = useState("");
-  const [priceRange, setPriceRange] = useState("");
+  const [rating, setRating] = useState("");
 
   const limit = 20;
 
@@ -19,35 +19,18 @@ const AllBooks = () => {
     currentSearch,
     currentSort,
     currentCategory,
-    currentPriceRange
+    currentRating
   ) => {
     setLoading(true);
 
     try {
-      let minPrice = "";
-      let maxPrice = "";
-
-      if (currentPriceRange === "0-200") {
-        minPrice = 0;
-        maxPrice = 200;
-      } else if (currentPriceRange === "201-500") {
-        minPrice = 201;
-        maxPrice = 500;
-      } else if (currentPriceRange === "501-1000") {
-        minPrice = 501;
-        maxPrice = 1000;
-      } else if (currentPriceRange === "1000+") {
-        minPrice = 1000;
-      }
-
       const query = new URLSearchParams({
         page: pageNumber,
         limit,
         search: currentSearch,
         sort: currentSort,
         category: currentCategory,
-        minPrice,
-        maxPrice,
+        rating: currentRating,
       });
 
       const res = await fetch(
@@ -64,6 +47,8 @@ const AllBooks = () => {
 
       if (data.length < limit) {
         setHasMore(false);
+      } else {
+        setHasMore(true);
       }
 
       setBooks((prev) => (pageNumber === 1 ? data : [...prev, ...data]));
@@ -75,8 +60,8 @@ const AllBooks = () => {
   };
 
   useEffect(() => {
-    fetchBooks(page, search, sort, category, priceRange);
-  }, [page, search, sort, category, priceRange]);
+    fetchBooks(page, search, sort, category, rating);
+  }, [page, search, sort, category, rating]);
 
   const resetAndFetch = () => {
     setBooks([]);
@@ -99,14 +84,13 @@ const AllBooks = () => {
     setCategory(e.target.value);
   };
 
-  const handlePriceChange = (e) => {
+  const handleRatingChange = (e) => {
     resetAndFetch();
-    setPriceRange(e.target.value);
+    setRating(e.target.value);
   };
 
   return (
     <div className="max-w-full mx-auto bg-amber-50 px-6 md:px-10 py-10">
-      {/* Search, Filter, Sort */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <input
           type="text"
@@ -122,23 +106,26 @@ const AllBooks = () => {
           className="border p-2 rounded-md w-full"
         >
           <option value="">All Categories</option>
-          <option value="Novel">Novel</option>
-          <option value="Science">Science</option>
-          <option value="History">History</option>
-          <option value="Programming">Programming</option>
-          <option value="Biography">Biography</option>
+          <option value="Fiction">Fiction</option>
+          <option value="Romance">Romance</option>
+          <option value="Drama">Drama</option>
+          <option value="Historical">Historical</option>
+          <option value="Poetry">Poetry</option>
+          <option value="Mystery">Mystery</option>
+          <option value="Adventure">Adventure</option>
         </select>
 
         <select
-          value={priceRange}
-          onChange={handlePriceChange}
+          value={rating}
+          onChange={handleRatingChange}
           className="border p-2 rounded-md w-full"
         >
-          <option value="">All Prices</option>
-          <option value="0-200">0 - 200</option>
-          <option value="201-500">201 - 500</option>
-          <option value="501-1000">501 - 1000</option>
-          <option value="1000+">1000+</option>
+          <option value="">All Ratings</option>
+          <option value="5">5 Stars</option>
+          <option value="4">4 Stars & Up</option>
+          <option value="3">3 Stars & Up</option>
+          <option value="2">2 Stars & Up</option>
+          <option value="1">1 Star & Up</option>
         </select>
 
         <select
@@ -152,7 +139,6 @@ const AllBooks = () => {
         </select>
       </div>
 
-      {/* Books Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {books.map((book) => (
           <Link key={book._id} to={`/${book._id}`}>
@@ -175,6 +161,9 @@ const AllBooks = () => {
                 <p className="text-sm text-gray-500 mt-1">
                   {book.category || "Uncategorized"}
                 </p>
+                <p className="text-sm text-yellow-600 mt-1">
+                  Rating: {book.rating || "N/A"}
+                </p>
                 <p className="text-[var(--color-primary)] font-semibold mt-2">
                   {book.price || "N/A"}
                 </p>
@@ -184,7 +173,6 @@ const AllBooks = () => {
         ))}
       </div>
 
-      {/* Show More Button */}
       {hasMore && books.length > 0 && (
         <div className="text-center mt-6">
           <button
